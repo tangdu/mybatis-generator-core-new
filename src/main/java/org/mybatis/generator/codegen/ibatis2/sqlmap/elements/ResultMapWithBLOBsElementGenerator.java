@@ -15,14 +15,14 @@
  */
 package org.mybatis.generator.codegen.ibatis2.sqlmap.elements;
 
-import static org.mybatis.generator.internal.util.StringUtility.isTrue;
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.ibatis2.Ibatis2FormattingUtilities;
 import org.mybatis.generator.config.PropertyRegistry;
+
+import static org.mybatis.generator.internal.util.StringUtility.isTrue;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 
 /**
  *  Generates the resultmap with BLOBs for iBatis2.
@@ -82,7 +82,7 @@ public class ResultMapWithBLOBsElementGenerator extends AbstractXmlElementGenera
                         Ibatis2FormattingUtilities.getRenamedColumnNameForResultMap(introspectedColumn)));
             }
             resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName())); //$NON-NLS-1$
+            //resultElement.addAttribute(new Attribute("jdbcType", introspectedColumn.getJdbcTypeName())); //$NON-NLS-1$
 
             if (stringHasValue(introspectedColumn.getTypeHandler())) {
                 resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$

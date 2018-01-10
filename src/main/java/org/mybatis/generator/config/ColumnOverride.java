@@ -15,14 +15,14 @@
  */
 package org.mybatis.generator.config;
 
-import static org.mybatis.generator.internal.util.StringUtility.stringContainsSpace;
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.XmlElement;
 
 import java.util.List;
 
-import org.mybatis.generator.api.dom.xml.Attribute;
-import org.mybatis.generator.api.dom.xml.XmlElement;
+import static org.mybatis.generator.internal.util.StringUtility.stringContainsSpace;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * The Class ColumnOverride.
@@ -174,7 +174,7 @@ public class ColumnOverride extends PropertyHolder {
         }
 
         if (stringHasValue(jdbcType)) {
-            xmlElement.addAttribute(new Attribute("jdbcType", jdbcType)); //$NON-NLS-1$
+            //xmlElement.addAttribute(new Attribute("jdbcType", jdbcType)); //$NON-NLS-1$
         }
 
         if (stringHasValue(typeHandler)) {
