@@ -15,21 +15,16 @@
  */
 package org.mybatis.generator.codegen.mybatis3.xmlmapper;
 
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
-
 import org.mybatis.generator.api.FullyQualifiedTable;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.Document;
+import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.codegen.XmlConstants;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.AbstractXmlElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.DeleteByPrimaryKeyElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.InsertElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.ResultMapWithoutBLOBsElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SimpleSelectAllElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.SimpleSelectByPrimaryKeyElementGenerator;
-import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.UpdateByPrimaryKeyWithoutBLOBsElementGenerator;
+import org.mybatis.generator.codegen.mybatis3.xmlmapper.elements.*;
+
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * 
@@ -53,17 +48,26 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
         context.getCommentGenerator().addRootComment(answer);
 
         addResultMapElement(answer);
+        addBaseColumnListElement(answer);
         addDeleteByPrimaryKeyElement(answer);
         addInsertElement(answer);
-        addUpdateByPrimaryKeyElement(answer);
         addSelectByPrimaryKeyElement(answer);
-        addSelectAllElement(answer);
-
+        addQueryPageElement(answer);
+        addUpdateByPrimaryKeyElement(answer);
+        addUpdateByPrimaryKeySelectiveElement(answer);
         return answer;
+    }
+
+    void addLineElement(XmlElement parentElement,String content){
+        for (int i = 0; i < 2; i++) {
+            parentElement.addElement(new TextElement(""));
+        }
+        parentElement.addElement(new TextElement(String.format("<!--%s-->",content)));
     }
 
     protected void addResultMapElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateBaseResultMap()) {
+            addLineElement(parentElement,"ResultMap");
             AbstractXmlElementGenerator elementGenerator = new ResultMapWithoutBLOBsElementGenerator(
                     true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
@@ -72,18 +76,22 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addSelectByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateSelectByPrimaryKey()) {
+            addLineElement(parentElement,"根据ID查询");
             AbstractXmlElementGenerator elementGenerator = new SimpleSelectByPrimaryKeyElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
 
-    protected void addSelectAllElement(XmlElement parentElement) {
+    protected void addQueryPageElement(XmlElement parentElement) {
+        addLineElement(parentElement,"根据参数分页查询");
         AbstractXmlElementGenerator elementGenerator = new SimpleSelectAllElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
+
     }
 
     protected void addDeleteByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            addLineElement(parentElement,"根据ID删除");
             AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
@@ -91,6 +99,7 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addInsertElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateInsert()) {
+            addLineElement(parentElement,"添加");
             AbstractXmlElementGenerator elementGenerator = new InsertElementGenerator(true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
@@ -98,11 +107,31 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addUpdateByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+            addLineElement(parentElement,"根据ID更新");
             AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeyWithoutBLOBsElementGenerator(
                     true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
+
+    protected void addUpdateByPrimaryKeySelectiveElement(XmlElement parentElement) {
+        if (introspectedTable.getRules().generateUpdateByPrimaryKeySelective()) {
+            addLineElement(parentElement,"根据ID选择性更新");
+            AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator(
+            );
+            initializeAndExecuteGenerator(elementGenerator, parentElement);
+        }
+    }
+
+    protected void addBaseColumnListElement(XmlElement parentElement) {
+        if (introspectedTable.getRules().generateBaseColumnList()) {
+            addLineElement(parentElement,"基础列");
+            AbstractXmlElementGenerator elementGenerator = new BaseColumnListElementGenerator(
+            );
+            initializeAndExecuteGenerator(elementGenerator, parentElement);
+        }
+    }
+
 
     protected void initializeAndExecuteGenerator(
             AbstractXmlElementGenerator elementGenerator,
