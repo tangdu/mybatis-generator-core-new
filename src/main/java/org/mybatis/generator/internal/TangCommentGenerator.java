@@ -8,6 +8,7 @@ import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.PropertyRegistry;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
@@ -25,8 +26,8 @@ public class TangCommentGenerator implements CommentGenerator {
 
     private boolean suppressDate;
 
-    private SimpleDateFormat dateFormat1=new SimpleDateFormat("yyyy年MM月dd日 下午hh:mm");
-    private SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy年MM月dd日 上午hh:mm");
+    private SimpleDateFormat dateFormat1=new SimpleDateFormat("yyyy年MM月dd日 上午HH:mm");
+    private SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy年MM月dd日 下午HH:mm");
 
     public TangCommentGenerator() {
         super();
@@ -36,6 +37,10 @@ public class TangCommentGenerator implements CommentGenerator {
 
     @Override
     public void addJavaFileComment(CompilationUnit compilationUnit) {
+        compilationUnit.addFileCommentLine("/**");
+        compilationUnit.addFileCommentLine("* xnh.com Inc.");
+        compilationUnit.addFileCommentLine("* Copyright (c) 2017-2018 All Rights Reserved.");
+        compilationUnit.addFileCommentLine("*/");
     }
 
     @Override
@@ -84,7 +89,8 @@ public class TangCommentGenerator implements CommentGenerator {
                                 IntrospectedTable introspectedTable) {
         String username=System.getProperty("user.name");
         String dateStr="";
-        if(new Date().getHours()>=0 && new Date().getHours()<=12){
+        int hour= Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if(hour>=0 && hour<=12){
             dateStr=dateFormat1.format(new Date());
         }else{
             dateStr=dateFormat2.format(new Date());
