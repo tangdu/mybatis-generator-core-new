@@ -108,8 +108,8 @@ public class Ibatis2FormattingUtilities {
         sb.append(introspectedColumn.getJavaProperty(prefix));
 
         if (stringHasValue(introspectedColumn.getTypeHandler())) {
-            sb.append(",jdbcType="); //$NON-NLS-1$
-            sb.append(introspectedColumn.getJdbcTypeName());
+            //sb.append(",jdbcType="); //$NON-NLS-1$
+            //sb.append(introspectedColumn.getJdbcTypeName());
             sb.append(",handler="); //$NON-NLS-1$
             sb.append(introspectedColumn.getTypeHandler());
         } else {
