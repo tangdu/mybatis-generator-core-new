@@ -174,7 +174,7 @@ public class ColumnOverride extends PropertyHolder {
         }
 
         if (stringHasValue(jdbcType)) {
-            //xmlElement.addAttribute(new Attribute("jdbcType", jdbcType)); //$NON-NLS-1$
+            xmlElement.addAttribute(new Attribute("jdbcType", jdbcType)); //$NON-NLS-1$
         }
 
         if (stringHasValue(typeHandler)) {

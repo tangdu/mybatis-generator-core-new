@@ -73,8 +73,8 @@ public class ResultMapWithoutBLOBsElementGenerator extends AbstractXmlElementGen
             }
 
             resultElement.addAttribute(new Attribute("property", introspectedColumn.getJavaProperty())); //$NON-NLS-1$
-            //resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
-            //        introspectedColumn.getJdbcTypeName()));
+            resultElement.addAttribute(new Attribute("jdbcType", //$NON-NLS-1$
+                    introspectedColumn.getJdbcTypeName()));
 
             if (stringHasValue(introspectedColumn.getTypeHandler())) {
                 resultElement.addAttribute(new Attribute("typeHandler", introspectedColumn.getTypeHandler())); //$NON-NLS-1$

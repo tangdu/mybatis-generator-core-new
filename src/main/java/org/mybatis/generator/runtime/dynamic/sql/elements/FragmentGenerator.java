@@ -15,6 +15,15 @@
  */
 package org.mybatis.generator.runtime.dynamic.sql.elements;
 
+import static org.mybatis.generator.api.dom.OutputUtilities.javaIndent;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
@@ -22,11 +31,6 @@ import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.codegen.mybatis3.ListUtilities;
 import org.mybatis.generator.config.GeneratedKey;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
-
-import java.util.*;
-
-import static org.mybatis.generator.api.dom.OutputUtilities.javaIndent;
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 
 public class FragmentGenerator {
 
@@ -161,8 +165,8 @@ public class FragmentGenerator {
             sb.append(".class"); //$NON-NLS-1$
         }
 
-        //sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
-        //sb.append(introspectedColumn.getJdbcTypeName());
+        sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
+        sb.append(introspectedColumn.getJdbcTypeName());
         if (idColumn) {
             sb.append(", id=true"); //$NON-NLS-1$
         }
@@ -234,8 +238,8 @@ public class FragmentGenerator {
             sb.append(".class"); //$NON-NLS-1$
         }
 
-        //sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
-        //sb.append(introspectedColumn.getJdbcTypeName());
+        sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
+        sb.append(introspectedColumn.getJdbcTypeName());
         if (idColumn) {
             sb.append(", id=true"); //$NON-NLS-1$
         }

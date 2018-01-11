@@ -64,8 +64,8 @@ public abstract class AbstractJavaMapperMethodGenerator extends
             sb.append(".class"); //$NON-NLS-1$
         }
 
-        //sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
-        //sb.append(introspectedColumn.getJdbcTypeName());
+        sb.append(", jdbcType=JdbcType."); //$NON-NLS-1$
+        sb.append(introspectedColumn.getJdbcTypeName());
         if (idColumn) {
             sb.append(", id=true"); //$NON-NLS-1$
         }
