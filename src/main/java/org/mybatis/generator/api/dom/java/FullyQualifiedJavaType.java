@@ -15,12 +15,12 @@
  */
 package org.mybatis.generator.api.dom.java;
 
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * The Class FullyQualifiedJavaType.
@@ -274,6 +274,11 @@ public class FullyQualifiedJavaType implements
     public static final FullyQualifiedJavaType getNewListInstance() {
         // always return a new instance because the type may be parameterized
         return new FullyQualifiedJavaType("java.util.List"); //$NON-NLS-1$
+    }
+
+    public static final FullyQualifiedJavaType getNewPageInstance() {
+        // always return a new instance because the type may be parameterized
+        return new FullyQualifiedJavaType("com.github.pagehelper.Page"); //$NON-NLS-1$
     }
 
     public static final FullyQualifiedJavaType getNewHashMapInstance() {
