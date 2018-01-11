@@ -183,7 +183,9 @@ public class MyBatisGeneratorConfigurationParser {
                 parseSqlMapGenerator(context, childNode);
             } else if ("javaClientGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseJavaClientGenerator(context, childNode);
-            } else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
+            }  else if ("javaServiceGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaSeviceClientGenerator(context, childNode);
+            }else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseTable(context, childNode);
             }
         }
@@ -625,6 +627,34 @@ public class MyBatisGeneratorConfigurationParser {
 
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(javaClientGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaSeviceClientGenerator(Context context, Node node) {
+        JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration = new JavaServiceGeneratorConfiguration();
+
+        context.setJavaServiceGeneratorConfiguration(javaServiceGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+        String implementationPackage = attributes .getProperty("implementationPackage"); //$NON-NLS-1$
+
+        javaServiceGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaServiceGeneratorConfiguration.setTargetProject(targetProject);
+        javaServiceGeneratorConfiguration.setImplementationPackage(implementationPackage);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaServiceGeneratorConfiguration, childNode);
             }
         }
     }

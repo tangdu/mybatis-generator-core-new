@@ -15,10 +15,13 @@
  */
 package org.mybatis.generator.config;
 
-import static org.mybatis.generator.internal.util.StringUtility.composeFullyQualifiedTableName;
-import static org.mybatis.generator.internal.util.StringUtility.isTrue;
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
+import org.mybatis.generator.api.*;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.XmlElement;
+import org.mybatis.generator.internal.JDBCConnectionFactory;
+import org.mybatis.generator.internal.ObjectFactory;
+import org.mybatis.generator.internal.PluginAggregator;
+import org.mybatis.generator.internal.db.DatabaseIntrospector;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -26,22 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.mybatis.generator.api.CommentGenerator;
-import org.mybatis.generator.api.ConnectionFactory;
-import org.mybatis.generator.api.GeneratedJavaFile;
-import org.mybatis.generator.api.GeneratedXmlFile;
-import org.mybatis.generator.api.IntrospectedTable;
-import org.mybatis.generator.api.JavaFormatter;
-import org.mybatis.generator.api.JavaTypeResolver;
-import org.mybatis.generator.api.Plugin;
-import org.mybatis.generator.api.ProgressCallback;
-import org.mybatis.generator.api.XmlFormatter;
-import org.mybatis.generator.api.dom.xml.Attribute;
-import org.mybatis.generator.api.dom.xml.XmlElement;
-import org.mybatis.generator.internal.JDBCConnectionFactory;
-import org.mybatis.generator.internal.ObjectFactory;
-import org.mybatis.generator.internal.PluginAggregator;
-import org.mybatis.generator.internal.db.DatabaseIntrospector;
+import static org.mybatis.generator.internal.util.StringUtility.*;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * The Class Context.
@@ -63,6 +52,8 @@ public class Context extends PropertyHolder {
     private JavaModelGeneratorConfiguration javaModelGeneratorConfiguration;
 
     private JavaClientGeneratorConfiguration javaClientGeneratorConfiguration;
+
+    private JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration;
 
     private ArrayList<TableConfiguration> tableConfigurations;
 
@@ -101,6 +92,14 @@ public class Context extends PropertyHolder {
 
         tableConfigurations = new ArrayList<TableConfiguration>();
         pluginConfigurations = new ArrayList<PluginConfiguration>();
+    }
+
+    public JavaServiceGeneratorConfiguration getJavaServiceGeneratorConfiguration() {
+        return javaServiceGeneratorConfiguration;
+    }
+
+    public void setJavaServiceGeneratorConfiguration(JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration) {
+        this.javaServiceGeneratorConfiguration = javaServiceGeneratorConfiguration;
     }
 
     public void addTableConfiguration(TableConfiguration tc) {
@@ -293,6 +292,10 @@ public class Context extends PropertyHolder {
 
         if (javaClientGeneratorConfiguration != null) {
             xmlElement.addElement(javaClientGeneratorConfiguration.toXmlElement());
+        }
+
+        if (javaServiceGeneratorConfiguration != null) {
+            xmlElement.addElement(javaServiceGeneratorConfiguration.toXmlElement());
         }
 
         for (TableConfiguration tableConfiguration : tableConfigurations) {
