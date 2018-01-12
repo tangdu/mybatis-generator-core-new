@@ -157,6 +157,10 @@ public class TangCommentGenerator implements CommentGenerator {
     @Override
     public void addGeneralMethodComment(Method method,
                                         IntrospectedTable introspectedTable) {
+//        String username=System.getProperty("user.name");
+//        method.addJavaDocLine("/**");
+//        method.addJavaDocLine("* @author "+username);
+//        method.addJavaDocLine("**/");
     }
 
     @Override

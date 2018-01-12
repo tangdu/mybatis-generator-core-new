@@ -220,6 +220,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         Method method = new Method();
         method.setName("queryById");
         method.setReturnType(pojoType);
+        method.addAnnotation("Override");
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
             method.addParameter(new Parameter(type, "key"));
@@ -248,6 +249,7 @@ public class MybatisServicePlugin extends PluginAdapter {
     protected Method deleteById(IntrospectedTable introspectedTable, String tableName) {
         Method method = new Method();
         method.setName("deleteById");
+        method.addAnnotation("Override");
         method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
@@ -280,6 +282,7 @@ public class MybatisServicePlugin extends PluginAdapter {
     protected Method getOtherInteger(String methodName, IntrospectedTable introspectedTable, String tableName, int type) {
         Method method = new Method();
         method.setName(methodName);
+        method.addAnnotation("Override");
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         String params = addParams(introspectedTable, method, type);
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -306,6 +309,7 @@ public class MybatisServicePlugin extends PluginAdapter {
     protected Method getOtherboolean(String methodName, IntrospectedTable introspectedTable, String tableName) {
         Method method = new Method();
         method.setName(methodName);
+        method.addAnnotation("Override");
         method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
         method.addParameter(new Parameter(pojoType, "record"));
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -514,6 +518,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         return toLowerCase(daoType.getShortName()) + ".";
     }
 
+    @Override
     public boolean clientInsertMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
         returnType = method.getReturnType();
         return true;
