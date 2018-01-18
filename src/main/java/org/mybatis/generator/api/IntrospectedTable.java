@@ -63,6 +63,8 @@ public abstract class IntrospectedTable {
         ATTR_COUNT_BY_EXAMPLE_STATEMENT_ID,
         ATTR_DELETE_BY_EXAMPLE_STATEMENT_ID,
         ATTR_DELETE_BY_PRIMARY_KEY_STATEMENT_ID,
+        ATTR_BAT_DELETE_BY_PRIMARY_KEY_STATEMENT_ID,
+        ATTR_DELETE2_BY_PRIMARY_KEY_STATEMENT_ID,
         ATTR_INSERT_STATEMENT_ID,
         ATTR_INSERT_SELECTIVE_STATEMENT_ID,
         ATTR_SELECT_ALL_STATEMENT_ID,
@@ -517,6 +519,9 @@ public abstract class IntrospectedTable {
         setCountByExampleStatementId("countByExample"); //$NON-NLS-1$
         setDeleteByExampleStatementId("deleteByExample"); //$NON-NLS-1$
         setDeleteByPrimaryKeyStatementId("deleteById"); //$NON-NLS-1$
+        setBatDeleteByPrimaryKeyStatementId("batchDeleteById"); //$NON-NLS-1$
+        setDelete2ByPrimaryKeyStatementId("deleteById");
+
         setInsertStatementId("add"); //$NON-NLS-1$
         setInsertSelectiveStatementId("addSelective"); //$NON-NLS-1$
         setSelectAllStatementId("queryPage"); //$NON-NLS-1$
@@ -635,6 +640,26 @@ public abstract class IntrospectedTable {
     public void setDeleteByPrimaryKeyStatementId(String s) {
         internalAttributes.put(
                 InternalAttribute.ATTR_DELETE_BY_PRIMARY_KEY_STATEMENT_ID, s);
+    }
+
+    public void setBatDeleteByPrimaryKeyStatementId(String s) {
+        internalAttributes.put(
+                InternalAttribute.ATTR_BAT_DELETE_BY_PRIMARY_KEY_STATEMENT_ID, s);
+    }
+
+    public String getBatDeleteByPrimaryKeyStatementId() {
+        return internalAttributes.get(
+                InternalAttribute.ATTR_BAT_DELETE_BY_PRIMARY_KEY_STATEMENT_ID);
+    }
+
+    public String getDelete2ByPrimaryKeyStatementId() {
+        return internalAttributes.get(
+                InternalAttribute.ATTR_DELETE2_BY_PRIMARY_KEY_STATEMENT_ID);
+    }
+
+    public void setDelete2ByPrimaryKeyStatementId(String s) {
+         internalAttributes.put(
+                InternalAttribute.ATTR_DELETE2_BY_PRIMARY_KEY_STATEMENT_ID,s);
     }
 
     public void setDeleteByExampleStatementId(String s) {

@@ -185,6 +185,8 @@ public class MyBatisGeneratorConfigurationParser {
                 parseJavaClientGenerator(context, childNode);
             }  else if ("javaServiceGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseJavaSeviceClientGenerator(context, childNode);
+            } else if ("javaFacadeGenerator".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseJavaFacadeClientGenerator(context, childNode);
             }else if ("table".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseTable(context, childNode);
             }
@@ -655,6 +657,34 @@ public class MyBatisGeneratorConfigurationParser {
             }
             if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
                 parseProperty(javaServiceGeneratorConfiguration, childNode);
+            }
+        }
+    }
+
+    private void parseJavaFacadeClientGenerator(Context context, Node node) {
+        JavaFacadeGeneratorConfiguration javaFacadeGeneratorConfiguration = new JavaFacadeGeneratorConfiguration();
+
+        context.setJavaFacadeGeneratorConfiguration(javaFacadeGeneratorConfiguration);
+
+        Properties attributes = parseAttributes(node);
+        String type = attributes.getProperty("type"); //$NON-NLS-1$
+        String targetPackage = attributes.getProperty("targetPackage"); //$NON-NLS-1$
+        String targetProject = attributes.getProperty("targetProject"); //$NON-NLS-1$
+        String implementationPackage = attributes .getProperty("implementationPackage"); //$NON-NLS-1$
+
+        javaFacadeGeneratorConfiguration.setTargetPackage(targetPackage);
+        javaFacadeGeneratorConfiguration.setTargetProject(targetProject);
+        javaFacadeGeneratorConfiguration.setImplementationPackage(implementationPackage);
+
+        NodeList nodeList = node.getChildNodes();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            Node childNode = nodeList.item(i);
+
+            if (childNode.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            if ("property".equals(childNode.getNodeName())) { //$NON-NLS-1$
+                parseProperty(javaFacadeGeneratorConfiguration, childNode);
             }
         }
     }

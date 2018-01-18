@@ -15,6 +15,7 @@
  */
 package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
 
+import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
@@ -37,10 +38,21 @@ public class SimpleSelectAllElementGenerator extends
     public void addElements(XmlElement parentElement) {
         XmlElement answer = new XmlElement("select"); //$NON-NLS-1$
 
+        String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
+        String table = introspectedTable.getBaseRecordType();
+        String tableName = table.replaceAll(pojoUrl + ".", "");
+        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
+        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
+        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+
+
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getSelectAllStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("resultMap", //$NON-NLS-1$
                 introspectedTable.getBaseResultMapId()));
+        answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
+                pageDOType.getFullyQualifiedName()));
+
 
         context.getCommentGenerator().addComment(answer);
 

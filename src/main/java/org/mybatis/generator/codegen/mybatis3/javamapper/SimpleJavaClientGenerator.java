@@ -72,7 +72,20 @@ public class SimpleJavaClientGenerator extends AbstractJavaClientGenerator {
             interfaze.addImportedType(fqjt);
         }
 
+        String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
+        String table = introspectedTable.getBaseRecordType();
+        String tableName = table.replaceAll(pojoUrl + ".", "");
+        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
+        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
+        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+        interfaze.addImportedType(uptDOType);
+        interfaze.addImportedType(uptBatDOType);
+        interfaze.addImportedType(pageDOType);
+
         addDeleteByPrimaryKeyMethod(interfaze);
+        addDelete2ByPrimaryKeyMethod(interfaze);
+        addBatDeleteByPrimaryKeyMethod(interfaze);
+
         addInsertMethod(interfaze);
         addSelectByPrimaryKeyMethod(interfaze);
         addPageMethod(interfaze);
@@ -96,6 +109,20 @@ public class SimpleJavaClientGenerator extends AbstractJavaClientGenerator {
     protected void addDeleteByPrimaryKeyMethod(Interface interfaze) {
         if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
             AbstractJavaMapperMethodGenerator methodGenerator = new DeleteByPrimaryKeyMethodGenerator(true);
+            initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
+    }
+
+    protected void addBatDeleteByPrimaryKeyMethod(Interface interfaze) {
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            AbstractJavaMapperMethodGenerator methodGenerator = new BatDeleteByPrimaryKeyMethodGenerator(true);
+            initializeAndExecuteGenerator(methodGenerator, interfaze);
+        }
+    }
+
+    protected void addDelete2ByPrimaryKeyMethod(Interface interfaze) {
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            AbstractJavaMapperMethodGenerator methodGenerator = new Delete2ByPrimaryKeyMethodGenerator(true);
             initializeAndExecuteGenerator(methodGenerator, interfaze);
         }
     }

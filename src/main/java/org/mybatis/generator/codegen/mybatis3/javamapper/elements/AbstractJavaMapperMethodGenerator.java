@@ -98,6 +98,11 @@ public abstract class AbstractJavaMapperMethodGenerator extends
             }
         }
     }
+    protected String toLowerCase(String tableName) {
+        StringBuilder sb = new StringBuilder(tableName);
+        sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
+        return sb.toString();
+    }
 
     protected void addGeneratedKeyImports(Interface interfaze, GeneratedKey gk) {
         IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());

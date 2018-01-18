@@ -51,7 +51,7 @@
   tables.
 -->
 <!ELEMENT context (property*, plugin*, commentGenerator?, (connectionFactory | jdbcConnection), javaTypeResolver?,
-                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?,javaServiceGenerator?, table+)>
+                         javaModelGenerator, sqlMapGenerator?, javaClientGenerator?,javaServiceGenerator?,javaFacadeGenerator?, table+)>
 <!ATTLIST context id ID #REQUIRED
   defaultModelType CDATA #IMPLIED
   targetRuntime CDATA #IMPLIED
@@ -63,6 +63,13 @@
         targetPackage CDATA #REQUIRED
         targetProject CDATA #REQUIRED
         implementationPackage CDATA #REQUIRED>
+
+<!ELEMENT javaFacadeGenerator (property*)>
+<!ATTLIST javaFacadeGenerator
+        targetPackage CDATA #REQUIRED
+        targetProject CDATA #REQUIRED
+        implementationPackage CDATA #REQUIRED>
+
 <!--
   The connectionFactory element is used to describe the connection factory used
   for connecting to the database for introspection.  Either connectionFacoty

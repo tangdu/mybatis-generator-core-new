@@ -50,6 +50,10 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
         addResultMapElement(answer);
         addBaseColumnListElement(answer);
         addDeleteByPrimaryKeyElement(answer);
+
+        addDelete2ByPrimaryKeyElement(answer);
+        addBatDeleteByPrimaryKeyElement(answer);
+
         addInsertElement(answer);
         addSelectByPrimaryKeyElement(answer);
         addQueryPageElement(answer);
@@ -93,8 +97,23 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addDeleteByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-            addLineElement(parentElement,"根据ID删除");
+            addLineElement(parentElement,"根据ID物理删除");
             AbstractXmlElementGenerator elementGenerator = new DeleteByPrimaryKeyElementGenerator(true);
+            initializeAndExecuteGenerator(elementGenerator, parentElement);
+        }
+    }
+
+    protected void addDelete2ByPrimaryKeyElement(XmlElement parentElement) {
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            addLineElement(parentElement,"根据ID删除(需修改)");
+            AbstractXmlElementGenerator elementGenerator = new Delete2ByPrimaryKeyElementGenerator(true);
+            initializeAndExecuteGenerator(elementGenerator, parentElement);
+        }
+    }
+    protected void addBatDeleteByPrimaryKeyElement(XmlElement parentElement) {
+        if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
+            addLineElement(parentElement,"根据ID批量删除(需修改)");
+            AbstractXmlElementGenerator elementGenerator = new BatDeleteByPrimaryKeyElementGenerator(true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }

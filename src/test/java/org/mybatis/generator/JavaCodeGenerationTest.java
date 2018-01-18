@@ -15,51 +15,40 @@
  */
 package org.mybatis.generator;
 
-import static org.junit.Assert.fail;
-
-import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
 import org.mybatis.generator.api.GeneratedJavaFile;
+import org.mybatis.generator.api.GeneratedXmlFile;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseProblemException;
+import java.util.ArrayList;
+import java.util.List;
 
-@RunWith(Parameterized.class)
 public class JavaCodeGenerationTest {
 
-    private GeneratedJavaFile generatedJavaFile;
-
-    public JavaCodeGenerationTest(GeneratedJavaFile generatedJavaFile) {
-        this.generatedJavaFile = generatedJavaFile;
-    }
-
+    private static boolean writerflag=true;
     @Test
     public void testJavaParse() {
-        ByteArrayInputStream is = new ByteArrayInputStream(
-                generatedJavaFile.getCompilationUnit().getFormattedContent().getBytes());
         try {
-            JavaParser.parse(is);
-        } catch (ParseProblemException e) {
-            fail("Generated Java File " + generatedJavaFile.getFileName() + " will not compile");
+            List<GeneratedJavaFile> generatedJavaFiles = generateJavaFiles();
+            for (GeneratedJavaFile generatedJavaFile : generatedJavaFiles) {
+                System.out.println(generatedJavaFile);
+            }
+
+            List<GeneratedXmlFile> generatedJavaFiles2 = generateXMLFiles();
+            for (GeneratedXmlFile generatedJavaFile : generatedJavaFiles2) {
+                System.out.println(generatedJavaFile);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();;
         }
     }
 
-    @Parameters
     public static List<GeneratedJavaFile> generateJavaFiles() throws Exception {
         List<GeneratedJavaFile> generatedFiles = new ArrayList<GeneratedJavaFile>();
         generatedFiles.addAll(generateJavaFilesMybatis());
-        generatedFiles.addAll(generateJavaFilesMybatisDsql());
-        generatedFiles.addAll(generateJavaFilesIbatis());
         return generatedFiles;
     }
 
@@ -68,14 +57,8 @@ public class JavaCodeGenerationTest {
         return generateJavaFiles("/scripts/generatorConfig.xml");
     }
 
-    private static List<GeneratedJavaFile> generateJavaFilesMybatisDsql() throws Exception {
-        createDatabase();
-        return generateJavaFiles("/scripts/generatorConfig_Dsql.xml");
-    }
-
-    private static List<GeneratedJavaFile> generateJavaFilesIbatis() throws Exception {
-        createDatabase();
-        return generateJavaFiles("/scripts/ibatorConfig.xml");
+    public static List<GeneratedXmlFile> generateXMLFiles() throws Exception {
+        return generateXMLFiles("/scripts/generatorConfig.xml");
     }
 
     private static List<GeneratedJavaFile> generateJavaFiles(String configFile) throws Exception {
@@ -86,8 +69,20 @@ public class JavaCodeGenerationTest {
         DefaultShellCallback shellCallback = new DefaultShellCallback(true);
 
         MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, shellCallback, warnings);
-        myBatisGenerator.generate(null, null, null, false);
+        myBatisGenerator.generate(null, null, null, writerflag);
         return myBatisGenerator.getGeneratedJavaFiles();
+    }
+
+    private static List<GeneratedXmlFile> generateXMLFiles(String configFile) throws Exception {
+        List<String> warnings = new ArrayList<String>();
+        ConfigurationParser cp = new ConfigurationParser(warnings);
+        Configuration config = cp.parseConfiguration(JavaCodeGenerationTest.class.getResourceAsStream(configFile));
+
+        DefaultShellCallback shellCallback = new DefaultShellCallback(true);
+
+        MyBatisGenerator myBatisGenerator = new MyBatisGenerator(config, shellCallback, warnings);
+        myBatisGenerator.generate(null, null, null, writerflag);
+        return myBatisGenerator.getGeneratedXmlFiles();
     }
 
     public static void createDatabase() throws Exception {

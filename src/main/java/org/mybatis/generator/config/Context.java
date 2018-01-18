@@ -55,6 +55,8 @@ public class Context extends PropertyHolder {
 
     private JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration;
 
+    private JavaFacadeGeneratorConfiguration javaFacadeGeneratorConfiguration;
+
     private ArrayList<TableConfiguration> tableConfigurations;
 
     private ModelType defaultModelType;
@@ -100,6 +102,14 @@ public class Context extends PropertyHolder {
 
     public void setJavaServiceGeneratorConfiguration(JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration) {
         this.javaServiceGeneratorConfiguration = javaServiceGeneratorConfiguration;
+    }
+
+    public JavaFacadeGeneratorConfiguration getJavaFacadeGeneratorConfiguration() {
+        return javaFacadeGeneratorConfiguration;
+    }
+
+    public void setJavaFacadeGeneratorConfiguration(JavaFacadeGeneratorConfiguration javaFacadeGeneratorConfiguration) {
+        this.javaFacadeGeneratorConfiguration = javaFacadeGeneratorConfiguration;
     }
 
     public void addTableConfiguration(TableConfiguration tc) {
@@ -296,6 +306,10 @@ public class Context extends PropertyHolder {
 
         if (javaServiceGeneratorConfiguration != null) {
             xmlElement.addElement(javaServiceGeneratorConfiguration.toXmlElement());
+        }
+
+        if (javaFacadeGeneratorConfiguration != null) {
+            xmlElement.addElement(javaFacadeGeneratorConfiguration.toXmlElement());
         }
 
         for (TableConfiguration tableConfiguration : tableConfigurations) {

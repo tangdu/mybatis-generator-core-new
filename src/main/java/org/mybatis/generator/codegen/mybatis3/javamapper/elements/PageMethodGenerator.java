@@ -15,10 +15,7 @@
  */
 package org.mybatis.generator.codegen.mybatis3.javamapper.elements;
 
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.JavaVisibility;
-import org.mybatis.generator.api.dom.java.Method;
+import org.mybatis.generator.api.dom.java.*;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -44,6 +41,14 @@ public class PageMethodGenerator extends AbstractJavaMapperMethodGenerator {
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
 
+        String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
+        String table = introspectedTable.getBaseRecordType();
+        String tableName = table.replaceAll(pojoUrl + ".", "");
+        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
+        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
+        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+
+
         FullyQualifiedJavaType returnType = FullyQualifiedJavaType
                 .getNewPageInstance();
         FullyQualifiedJavaType listType;
@@ -54,6 +59,7 @@ public class PageMethodGenerator extends AbstractJavaMapperMethodGenerator {
         returnType.addTypeArgument(listType);
         method.setReturnType(returnType);
         method.setName(introspectedTable.getSelectAllStatementId());
+        method.addParameter(new Parameter(pageDOType,toLowerCase(pageDOType.getShortName())));
 
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);

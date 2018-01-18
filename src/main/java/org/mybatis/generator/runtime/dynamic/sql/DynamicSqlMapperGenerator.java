@@ -15,42 +15,18 @@
  */
 package org.mybatis.generator.runtime.dynamic.sql;
 
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.mybatis.generator.api.dom.java.CompilationUnit;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.JavaVisibility;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.AbstractXmlGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
 import org.mybatis.generator.internal.util.JavaBeansUtil;
-import org.mybatis.generator.runtime.dynamic.sql.elements.AbstractMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.BasicCountMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.BasicDeleteMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.BasicInsertMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.BasicSelectManyMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.BasicSelectOneMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.BasicUpdateMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.CountByExampleMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.DeleteByExampleMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.DeleteByPrimaryKeyMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.FragmentGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.InsertMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.InsertSelectiveMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.MethodAndImports;
-import org.mybatis.generator.runtime.dynamic.sql.elements.SelectByExampleMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.SelectByPrimaryKeyMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.SelectDistinctByExampleMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.UpdateByExampleMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.UpdateByExampleSelectiveMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.UpdateByPrimaryKeyMethodGenerator;
-import org.mybatis.generator.runtime.dynamic.sql.elements.UpdateByPrimaryKeySelectiveMethodGenerator;
+import org.mybatis.generator.runtime.dynamic.sql.elements.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * @author Jeff Butler
@@ -94,6 +70,7 @@ public class DynamicSqlMapperGenerator extends AbstractJavaClientGenerator {
         addCountByExampleMethod(interfaze);
         addDeleteByExampleMethod(interfaze);
         addDeleteByPrimaryKeyMethod(interfaze);
+        addBatDeleteByPrimaryKeyMethod(interfaze);
         addInsertMethod(interfaze);
         addInsertSelectiveMethod(interfaze);
         addSelectByExampleMethod(interfaze);
@@ -239,6 +216,18 @@ public class DynamicSqlMapperGenerator extends AbstractJavaClientGenerator {
         
         generate(interfaze, generator);
     }
+
+    private void addBatDeleteByPrimaryKeyMethod(Interface interfaze) {
+        BatDeleteByPrimaryKeyMethodGenerator generator = new BatDeleteByPrimaryKeyMethodGenerator.Builder()
+                .withContext(context)
+                .withIntrospectedTable(introspectedTable)
+                .withFragmentGenerator(fragmentGenerator)
+                .withTableFieldName(tableFieldName)
+                .build();
+
+        generate(interfaze, generator);
+    }
+
 
     private void addInsertMethod(Interface interfaze) {
         InsertMethodGenerator generator = new InsertMethodGenerator.Builder()
