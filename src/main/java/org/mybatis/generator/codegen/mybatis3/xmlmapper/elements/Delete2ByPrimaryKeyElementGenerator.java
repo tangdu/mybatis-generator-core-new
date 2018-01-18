@@ -49,19 +49,6 @@ public class Delete2ByPrimaryKeyElementGenerator extends
 
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getBatDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
-        String parameterClass;
-        if (!isSimple && introspectedTable.getRules().generatePrimaryKeyClass()) {
-            parameterClass = introspectedTable.getPrimaryKeyType();
-        } else {
-            // PK fields are in the base class. If more than on PK
-            // field, then they are coming in a map.
-            if (introspectedTable.getPrimaryKeyColumns().size() > 1) {
-                parameterClass = "map"; //$NON-NLS-1$
-            } else {
-                parameterClass = introspectedTable.getPrimaryKeyColumns()
-                        .get(0).getFullyQualifiedJavaType().toString();
-            }
-        }
         answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
                 uptDOType.getFullyQualifiedName()));
 
@@ -70,6 +57,7 @@ public class Delete2ByPrimaryKeyElementGenerator extends
         StringBuilder sb = new StringBuilder();
         sb.append("update "); //$NON-NLS-1$
         sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+        sb.append(" set is_delete = 1,update_person = #{updatePerson} ");
         answer.addElement(new TextElement(sb.toString()));
 
         boolean and = false;

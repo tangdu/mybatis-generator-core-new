@@ -15,16 +15,16 @@
  */
 package org.mybatis.generator.api;
 
-import java.util.List;
-import java.util.Properties;
-
-import org.mybatis.generator.api.dom.java.Field;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.Document;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.Context;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * This class includes no-operation methods for almost every method in the
@@ -565,4 +565,45 @@ public abstract class PluginAdapter implements Plugin {
             IntrospectedTable introspectedTable) {
         return true;
     }
+
+    protected void addMethodComment(JavaElement field, String comment, String ags, String agsName, String result) {
+        StringBuilder sb = new StringBuilder();
+        field.addJavaDocLine("/**");
+        sb.append(" * ").append(comment);
+        sb.append("\n");
+        sb.append("\t * ");
+        sb.append("\n");
+        sb.append("\t * @param ").append(ags).append(" ").append(agsName);
+        sb.append("\n");
+        sb.append("\t * @return ").append(result);
+        field.addJavaDocLine(sb.toString());
+        field.addJavaDocLine(" */");
+    }
+
+    private SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy年MM月dd日 上午HH:mm");
+    private SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy年MM月dd日 下午HH:mm");
+
+    protected void addClassComment(JavaElement innerClass,FullyQualifiedJavaType type, IntrospectedTable introspectedTable,String comment) {
+        String username = System.getProperty("user.name");
+        String dateStr = "";
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour >= 0 && hour <= 12) {
+            dateStr = dateFormat1.format(new Date());
+        } else {
+            dateStr = dateFormat2.format(new Date());
+        }
+        StringBuilder sb = new StringBuilder();
+        innerClass.addJavaDocLine("/**");
+        sb.append(" * ");
+        sb.append(introspectedTable.getRemarks() + comment);
+        sb.append("\n");
+        sb.append(" * ");
+        sb.append("\n");
+        sb.append(" * ");
+        sb.append("@author ").append(username).append("\n");
+        sb.append(" * ").append("@version ").append(String.format("$: %s.java, v 0.1 %s %s Exp $ ", type.getShortName(), dateStr, username));
+        innerClass.addJavaDocLine(sb.toString());
+        innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
+    }
+
 }

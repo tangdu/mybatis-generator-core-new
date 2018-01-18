@@ -18,6 +18,7 @@ package org.mybatis.generator.codegen.mybatis3.javamapper.elements;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Interface;
+import org.mybatis.generator.api.dom.java.JavaElement;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.codegen.AbstractGenerator;
 import org.mybatis.generator.config.GeneratedKey;
@@ -117,5 +118,24 @@ public abstract class AbstractJavaMapperMethodGenerator extends
                 interfaze.addImportedType(fqjt);
             }
         }
+    }
+
+    protected String getTableRemark(){
+        return this.introspectedTable.getRemarks();
+    }
+
+    protected void addMethodComment(JavaElement field, String comment, String ags, String agsName, String result) {
+
+        StringBuilder sb = new StringBuilder();
+        field.addJavaDocLine("/**");
+        sb.append(" * ").append(comment);
+        sb.append("\n");
+        sb.append("\t * ");
+        sb.append("\n");
+        sb.append("\t * @param ").append(ags).append(" ").append(agsName);
+        sb.append("\n");
+        sb.append("\t * @return ").append(result);
+        field.addJavaDocLine(sb.toString());
+        field.addJavaDocLine(" */");
     }
 }

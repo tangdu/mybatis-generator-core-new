@@ -86,7 +86,10 @@ public class BatDeleteByPrimaryKeyMethodGenerator extends
             }
         }*/
 
+
         method.addParameter(new Parameter(uptBatDOType,toLowerCase(uptBatDOType.getShortName())));
+        addMethodComment(method, "根据ID批量删除" + getTableRemark() + "信息", method.getParameters().get(0).getName(),
+                getTableRemark() + "删除对象", "影响行");
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 

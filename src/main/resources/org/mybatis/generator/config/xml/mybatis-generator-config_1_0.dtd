@@ -68,7 +68,8 @@
 <!ATTLIST javaFacadeGenerator
         targetPackage CDATA #REQUIRED
         targetProject CDATA #REQUIRED
-        implementationPackage CDATA #REQUIRED>
+        implementationPackage CDATA #REQUIRED
+        stateCodePackage CDATA #REQUIRED>
 
 <!--
   The connectionFactory element is used to describe the connection factory used

@@ -10,8 +10,6 @@ import org.mybatis.generator.config.JavaServiceGeneratorConfiguration;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,6 +32,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
     private FullyQualifiedJavaType autowired;
     private FullyQualifiedJavaType service;
     private FullyQualifiedJavaType returnType;
+    private FullyQualifiedJavaType statecodeType;
 
     private FullyQualifiedJavaType uptDOType;
     private FullyQualifiedJavaType uptBatDOType;
@@ -44,6 +43,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
     private String serviceImplPack;
     private String facadePack;
     private String facadeImplPack;
+    private String stateCodePackage;
     private String project;
     private String pojoUrl;
     private SimpleDateFormat       dateFormat1      = new SimpleDateFormat("yyyy年MM月dd日 上午HH:mm");
@@ -64,6 +64,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         this.serviceImplPack = javaServiceGeneratorConfiguration.getImplementationPackage();
         this.facadeImplPack = javaFacadeGeneratorConfiguration.getImplementationPackage();
         this.project = javaServiceGeneratorConfiguration.getTargetProject();
+        this.stateCodePackage=javaFacadeGeneratorConfiguration.getStateCodePackage();
 
         this.pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
         autowired = new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired");
@@ -104,22 +105,30 @@ public class MybatisFacadePlugin extends PluginAdapter {
         uptBatDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "BatDelDO");
         pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "PageQueryDO");
         pageRTDOType = new FullyQualifiedJavaType("Page<" + tableName + ">");
+        statecodeType=new FullyQualifiedJavaType(stateCodePackage+"."+pojoType+"StateCode");
 
-        Interface interface1 = new Interface(facadeInterfaceType);
-        TopLevelClass topLevelClass = new TopLevelClass(facadeType);
-        TopLevelClass topLevelClass2 = new TopLevelClass(facadeInterfaceType);
+        Interface facadeInterface = new Interface(facadeInterfaceType);
+        Interface stateCodeInterface = new Interface(statecodeType);
+        TopLevelClass topLevelFacadeClass = new TopLevelClass(facadeType);
 
-        addJavaFileComment(topLevelClass2);
-        addJavaFileComment(topLevelClass);
-        addClassComment(topLevelClass2, introspectedTable);
-        addClassComment(topLevelClass, introspectedTable);
+
+        addJavaFileComment(facadeInterface);
+        addJavaFileComment(stateCodeInterface);
+        addJavaFileComment(topLevelFacadeClass);
+
+        addClassComment(stateCodeInterface,statecodeType, introspectedTable,"状态码(从-200开始)");
+        addClassComment(facadeInterface,facadeInterfaceType,introspectedTable,"服务消费者");
+        addClassComment(topLevelFacadeClass,facadeType, introspectedTable,"服务生产者");
 
         // 导入必须的类
-        addImport(interface1, topLevelClass);
+        addImport(facadeInterface, topLevelFacadeClass);
+
+        // 状态码
+        addStateCode(stateCodeInterface, introspectedTable, tableName, files);
         // 接口
-        addService(interface1, introspectedTable, tableName, files);
+        addService(facadeInterface, introspectedTable, tableName, files);
         // 实现类
-        addServiceImpl(topLevelClass, introspectedTable, tableName, files);
+        addServiceImpl(topLevelFacadeClass, introspectedTable, tableName, files);
 
         return files;
     }
@@ -131,42 +140,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         compilationUnit.addFileCommentLine("*/");
     }
 
-    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
-        String username = System.getProperty("user.name");
-        String dateStr = "";
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if (hour >= 0 && hour <= 12) {
-            dateStr = dateFormat1.format(new Date());
-        } else {
-            dateStr = dateFormat2.format(new Date());
-        }
-        StringBuilder sb = new StringBuilder();
-        innerClass.addJavaDocLine("/**");
-        sb.append(" * ");
-        sb.append(introspectedTable.getRemarks() + "服务实现方");
-        sb.append("\n");
-        sb.append(" * ");
-        sb.append("\n");
-        sb.append(" * ");
-        sb.append("@author ").append(username).append("\n");
-        sb.append(" * ").append("@version ").append(String.format("$: %s.java, v 0.1 %s %s Exp $ ", innerClass.getType().getShortName(), dateStr, username));
-        innerClass.addJavaDocLine(sb.toString());
-        innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
-    }
 
-    protected void addMethodComment(JavaElement field, String comment, String ags, String agsName, String result) {
-        StringBuilder sb = new StringBuilder();
-        field.addJavaDocLine("/**");
-        sb.append(" * ").append(comment);
-        sb.append("\n");
-        sb.append("\t * ");
-        sb.append("\n");
-        sb.append("\t * @param ").append(ags).append(" ").append(agsName);
-        sb.append("\n");
-        sb.append("\t * @return ").append(result);
-        field.addJavaDocLine(sb.toString());
-        field.addJavaDocLine(" */");
-    }
 
     /**
      * add interface
@@ -176,8 +150,13 @@ public class MybatisFacadePlugin extends PluginAdapter {
      */
     protected void addService(Interface interface1, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         interface1.setVisibility(JavaVisibility.PUBLIC);
-        addJavaFileComment(interface1);
         String remarks = introspectedTable.getRemarks();
+        if(remarks.endsWith("表")){
+            remarks=remarks.substring(0,remarks.length()-1);
+        }
+        if(remarks.endsWith("信息")){
+            remarks=remarks.substring(0,remarks.length()-1);
+        }
 
         Method method = null;
         method = queryById(introspectedTable, tableName, false);
@@ -188,7 +167,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         method = pageQuery(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "ID");
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
 
         method = add(introspectedTable, tableName, false);
         method.removeAllBodyLines();
@@ -198,26 +177,80 @@ public class MybatisFacadePlugin extends PluginAdapter {
         method = getOtherboolean(wrapperName("update%sById"), introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "全量更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "更新成功或失败");
+        addMethodComment(method, "更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
 
         method = getOtherboolean(wrapperName("update%sByParams"), introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "选择更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "更新成功或失败");
+        addMethodComment(method, "选择更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
 
         method = getOtherboolean(wrapperName("delete%sById"), introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "根据ID删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "删除成功或失败");
+        addMethodComment(method, "根据ID删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
 
         method = getOtherboolean(wrapperName("batchDelete%sById"), introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "根据ID批量删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "删除成功或失败");
+        addMethodComment(method, "根据ID批量删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
 
         GeneratedJavaFile file = new GeneratedJavaFile(interface1, project, context.getJavaFormatter());
         files.add(file);
     }
+
+    protected void addStateCode(Interface inter, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
+        inter.setVisibility(JavaVisibility.PUBLIC);
+        addStateCodeField(inter, introspectedTable);
+        inter.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.result.StateCode"));
+
+        GeneratedJavaFile file = new GeneratedJavaFile(inter, project, context.getJavaFormatter());
+        files.add(file);
+    }
+    protected void addStateCodeField(Interface inter,IntrospectedTable introspectedTable) {
+        Field field = new Field();;
+        field.setName((pojoType.getShortName()).toUpperCase()+"_NOT_FOUND");
+        field.setType(statecodeType); // type
+        String desc=String.format("%s数据不存在",introspectedTable.getRemarks());
+        field.setInitializationString("new "+statecodeType.getShortName()+"(-200,\""+desc+"\")");
+        inter.addField(field);
+        //
+        field = new Field();
+        field.setName((pojoType.getShortName()).toUpperCase()+"_ADD_FAIL");
+        field.setType(statecodeType); // type
+        desc=String.format("%s添加失败",introspectedTable.getRemarks());
+        field.setInitializationString("new "+statecodeType.getShortName()+"(-200,\""+desc+"\")");
+        inter.addField(field);
+        //
+        field = new Field();
+        field.setName((pojoType.getShortName()).toUpperCase()+"_UPT_FAIL");
+        field.setType(statecodeType); // type
+        desc=String.format("%s更新失败",introspectedTable.getRemarks());
+        field.setInitializationString("new "+statecodeType.getShortName()+"(-200,\""+desc+"\")");
+        inter.addField(field);
+        //
+        field = new Field();
+        field.setName((pojoType.getShortName()).toUpperCase()+"_DEL_FAIL");
+        field.setType(statecodeType); // type
+        desc=String.format("%s删除失败",introspectedTable.getRemarks());
+        field.setInitializationString("new "+statecodeType.getShortName()+"(-200,\""+desc+"\")");
+        inter.addField(field);
+        //
+        field = new Field();
+        field.setName((pojoType.getShortName()).toUpperCase()+"_ID_NULL");
+        field.setType(statecodeType); // type
+        desc=String.format("%sID不可为空",introspectedTable.getRemarks());
+        field.setInitializationString("new "+statecodeType.getShortName()+"(-200,\""+desc+"\")");
+        inter.addField(field);
+        //
+        field = new Field();
+        field.setName((pojoType.getShortName()).toUpperCase()+"_QUERY_FAIL");
+        field.setType(statecodeType); // type
+        desc=String.format("%s查询失败",introspectedTable.getRemarks());
+        field.setInitializationString("new "+statecodeType.getShortName()+"(-200,\""+desc+"\")");
+        inter.addField(field);
+    }
+
+
 
     /**
      * add implements class
@@ -244,7 +277,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.addMethod(method);
 
         method = pageQuery(introspectedTable, tableName, true);
-        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "ID");
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页");
         topLevelClass.addMethod(method);
 
         method = add(introspectedTable, tableName, true);
@@ -253,19 +286,19 @@ public class MybatisFacadePlugin extends PluginAdapter {
 
 
         method = getOtherboolean(wrapperName("update%sById"), introspectedTable, tableName, true);
-        addMethodComment(method, "全量更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "更新成功或失败");
+        addMethodComment(method, "更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
         topLevelClass.addMethod(method);
 
         method = getOtherboolean(wrapperName("update%sByParams"), introspectedTable, tableName, true);
-        addMethodComment(method, "选择更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "更新成功或失败");
+        addMethodComment(method, "选择更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
         topLevelClass.addMethod(method);
 
         method = getOtherboolean(wrapperName("delete%sById"), introspectedTable, tableName, true);
-        addMethodComment(method, "根据ID删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "删除成功或失败");
+        addMethodComment(method, "根据ID删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
         topLevelClass.addMethod(method);
 
         method = getOtherboolean(wrapperName("batchDelete%sById"), introspectedTable, tableName, true);
-        addMethodComment(method, "根据ID批量删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "删除成功或失败");
+        addMethodComment(method, "根据ID批量删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
         topLevelClass.addMethod(method);
 
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
@@ -351,7 +384,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         StringBuilder sb = new StringBuilder();
         sb.append("ValidateTools.validate(" + name + ");");
         sb.append("\n");
-        sb.append("\t\tLong result=userService.add(userDO);");
+        sb.append("\t\tLong result=this."+getDaoShort()+"add("+name+");");
         sb.append("\n");
         sb.append("\t\tif(result==null || result<1) {");
         sb.append("\n");

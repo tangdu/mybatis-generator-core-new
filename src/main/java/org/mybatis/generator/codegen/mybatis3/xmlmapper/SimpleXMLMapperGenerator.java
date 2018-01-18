@@ -105,14 +105,14 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addDelete2ByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-            addLineElement(parentElement,"根据ID删除(需修改)");
+            addLineElement(parentElement,"根据ID逻辑删除");
             AbstractXmlElementGenerator elementGenerator = new Delete2ByPrimaryKeyElementGenerator(true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
     }
     protected void addBatDeleteByPrimaryKeyElement(XmlElement parentElement) {
         if (introspectedTable.getRules().generateDeleteByPrimaryKey()) {
-            addLineElement(parentElement,"根据ID批量删除(需修改)");
+            addLineElement(parentElement,"根据ID批量逻辑删除");
             AbstractXmlElementGenerator elementGenerator = new BatDeleteByPrimaryKeyElementGenerator(true);
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }

@@ -15,14 +15,10 @@
  */
 package org.mybatis.generator.codegen.mybatis3.javamapper.elements;
 
+import org.mybatis.generator.api.dom.java.*;
+
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.JavaVisibility;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.Parameter;
 
 /**
  * 
@@ -47,8 +43,10 @@ public class UpdateByPrimaryKeyWithoutBLOBsMethodGenerator extends
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getIntInstance());
         method.setName(introspectedTable.getUpdateByPrimaryKeyStatementId());
-        method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
+        method.addParameter(new Parameter(parameterType, toLowerCase(parameterType.getShortName()))); //$NON-NLS-1$
 
+        addMethodComment(method, "更新" + getTableRemark() + "信息", method.getParameters().get(0).getName(),
+                getTableRemark() + "更新信息", "影响行数");
         context.getCommentGenerator().addGeneralMethodComment(method,
                 introspectedTable);
 

@@ -13,6 +13,7 @@ public class JavaFacadeGeneratorConfiguration extends PropertyHolder {
     private String targetPackage;
     private String targetProject;
     private String implementationPackage;
+    private String stateCodePackage;
 
     public JavaFacadeGeneratorConfiguration() {
         super();
@@ -42,6 +43,14 @@ public class JavaFacadeGeneratorConfiguration extends PropertyHolder {
         this.implementationPackage = implementationPackage;
     }
 
+    public String getStateCodePackage() {
+        return stateCodePackage;
+    }
+
+    public void setStateCodePackage(String stateCodePackage) {
+        this.stateCodePackage = stateCodePackage;
+    }
+
     public XmlElement toXmlElement() {
         XmlElement answer = new XmlElement("javaFacadeGenerator"); //$NON-NLS-1$
         if (targetPackage != null) {
@@ -52,6 +61,9 @@ public class JavaFacadeGeneratorConfiguration extends PropertyHolder {
         }
         if (implementationPackage != null) {
             answer.addAttribute(new Attribute("implementationPackage", implementationPackage)); //$NON-NLS-1$
+        }
+        if (stateCodePackage != null) {
+            answer.addAttribute(new Attribute("stateCodePackage", stateCodePackage)); //$NON-NLS-1$
         }
         addPropertyXmlElements(answer);
         return answer;

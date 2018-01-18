@@ -7,10 +7,7 @@ import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.config.JavaServiceGeneratorConfiguration;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -42,8 +39,6 @@ public class MybatisServicePlugin extends PluginAdapter {
     private String serviceImplPack;
     private String project;
     private String pojoUrl;
-    private SimpleDateFormat       dateFormat1      = new SimpleDateFormat("yyyy年MM月dd日 上午HH:mm");
-    private SimpleDateFormat       dateFormat2      = new SimpleDateFormat("yyyy年MM月dd日 下午HH:mm");
     private FullyQualifiedJavaType serializableType = new FullyQualifiedJavaType("java.io.Serializable");
     /**
      * 所有的方法
@@ -89,35 +84,35 @@ public class MybatisServicePlugin extends PluginAdapter {
         serviceType = new FullyQualifiedJavaType(serviceImplPack + "." + tableName + "ServiceImpl");
         pojoType = new FullyQualifiedJavaType(pojoUrl + "." + tableName);
         listType = new FullyQualifiedJavaType("java.util.List");
-        uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
-        uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
-        pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
-        pageRTDOType = new FullyQualifiedJavaType("PageData<" +tableName+ ">");
+        uptDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "DelDO");
+        uptBatDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "BatDelDO");
+        pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "PageQueryDO");
+        pageRTDOType = new FullyQualifiedJavaType("PageData<" + tableName + ">");
 
-        Interface interface1 = new Interface(interfaceType);
-        TopLevelClass topLevelClass = new TopLevelClass(serviceType);
-        TopLevelClass topLevelClass2 = new TopLevelClass(interfaceType);
+        Interface serviceInterface = new Interface(interfaceType);
+        TopLevelClass serviceClass = new TopLevelClass(serviceType);
 
-        addJavaFileComment(topLevelClass2);
-        addJavaFileComment(topLevelClass);
-        addClassComment(topLevelClass2, introspectedTable);
-        addClassComment(topLevelClass, introspectedTable);
+        addJavaFileComment(serviceInterface);
+        addJavaFileComment(serviceClass);
+
+        addClassComment(serviceInterface, interfaceType, introspectedTable, "服务接口");
+        addClassComment(serviceClass, serviceType, introspectedTable, "服务实现");
 
 
         //导入操作类
         TopLevelClass uptDOTypeClass = new TopLevelClass(uptDOType);
         TopLevelClass uptBatDOTypeClass = new TopLevelClass(uptBatDOType);
         TopLevelClass pageDOTypeClss = new TopLevelClass(pageDOType);
-        addDO(uptDOTypeClass, introspectedTable, tableName, files);
-        addDO(uptBatDOTypeClass, introspectedTable, tableName, files);
+        addDelDO(uptDOTypeClass, introspectedTable, tableName, files);
+        addBatDelDO(uptBatDOTypeClass, introspectedTable, tableName, files);
         addPageDO(pageDOTypeClss, introspectedTable, tableName, files);
 
         // 导入必须的类
-        addImport(interface1, topLevelClass);
+        addImport(serviceInterface, serviceClass);
         // 接口
-        addService(interface1, introspectedTable, tableName, files);
+        addService(serviceInterface, introspectedTable, tableName, files);
         // 实现类
-        addServiceImpl(topLevelClass, introspectedTable, tableName, files);
+        addServiceImpl(serviceClass, introspectedTable, tableName, files);
 
         return files;
     }
@@ -129,29 +124,6 @@ public class MybatisServicePlugin extends PluginAdapter {
         compilationUnit.addFileCommentLine("*/");
     }
 
-    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
-        String username = System.getProperty("user.name");
-        String dateStr = "";
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if (hour >= 0 && hour <= 12) {
-            dateStr = dateFormat1.format(new Date());
-        } else {
-            dateStr = dateFormat2.format(new Date());
-        }
-        StringBuilder sb = new StringBuilder();
-        innerClass.addJavaDocLine("/**");
-        sb.append(" * ");
-        sb.append(introspectedTable.getRemarks() + "服务实现方");
-        sb.append("\n");
-        sb.append(" * ");
-        sb.append("\n");
-        sb.append(" * ");
-        sb.append("@author ").append(username).append("\n");
-        sb.append(" * ").append("@version ").append(String.format("$: %s.java, v 0.1 %s %s Exp $ ", innerClass.getType().getShortName(), dateStr, username));
-        innerClass.addJavaDocLine(sb.toString());
-        innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
-    }
-
 
     /**
      * add interface
@@ -161,51 +133,113 @@ public class MybatisServicePlugin extends PluginAdapter {
      */
     protected void addService(Interface interface1, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         interface1.setVisibility(JavaVisibility.PUBLIC);
-        addJavaFileComment(interface1);
-
-        Method method = getOtherboolean("deleteById", introspectedTable, tableName,false);
+        String remarks = introspectedTable.getRemarks();
+        if (remarks.endsWith("表")) {
+            remarks = remarks.substring(0, remarks.length() - 1);
+        }
+        if (remarks.endsWith("信息")) {
+            remarks = remarks.substring(0, remarks.length() - 1);
+        }
+        Method method = null;
+        method = queryById(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "根据ID查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "ID", remarks + "信息");
 
-        method = getOtherboolean("batchDeleteById", introspectedTable, tableName,false);
+        method = pageQuery(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
 
-        method = add(introspectedTable, tableName,false);
+        method = add(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "添加" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "记录ID");
 
-        method = queryById(introspectedTable, tableName,false);
+        method = getOtherboolean("updateById", introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
 
-        method = pageQuery(introspectedTable, tableName,false);
+        method = getOtherboolean("updateByParams", introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "选择更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
 
-        method = getOtherboolean("updateByParams", introspectedTable, tableName,false);
+        method = getOtherboolean("deleteById", introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "根据ID删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
 
-        method = getOtherboolean("updateById", introspectedTable, tableName,false);
+        method = getOtherboolean("batchDeleteById", introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
+        addMethodComment(method, "根据ID批量删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
 
         GeneratedJavaFile file = new GeneratedJavaFile(interface1, project, context.getJavaFormatter());
-
         files.add(file);
     }
 
-    protected void addDO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
+    protected void addDelDO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         // set implements interface
         topLevelClass.addSuperInterface(serializableType);
         topLevelClass.addImportedType("lombok.Setter");
         topLevelClass.addImportedType("lombok.Getter");
         topLevelClass.addImportedType("java.io.Serializable");
+        topLevelClass.addImportedType("cn.luban.commons.validate.Validate");
         topLevelClass.addAnnotation("@Setter");
         topLevelClass.addAnnotation("@Getter");
-        addDOComment(topLevelClass,introspectedTable);
+        Field field=new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setName("id");
+        field.addAnnotation("@Validate(required = true)");
+        field.setType(new FullyQualifiedJavaType("java.lang.Long"));
+        field.addJavaDocLine("/** "+introspectedTable.getRemarks()+"Id **/");
+        topLevelClass.addField(field);
+
+        field=new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setName("updatePerson");
+        field.addAnnotation("@Validate(isNotBlank = true)");
+        field.setType(new FullyQualifiedJavaType("java.lang.String"));
+        field.addJavaDocLine("/** 变更人 **/");
+        topLevelClass.addField(field);
+
+        addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "操作DO");
+        addJavaFileComment(topLevelClass);
+        GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
+        files.add(file);
+    }
+
+    protected void addBatDelDO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
+        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        // set implements interface
+        topLevelClass.addSuperInterface(serializableType);
+        topLevelClass.addImportedType("lombok.Setter");
+        topLevelClass.addImportedType("lombok.Getter");
+        topLevelClass.addImportedType("java.io.Serializable");
+        topLevelClass.addImportedType("java.util.List");
+        topLevelClass.addImportedType("cn.luban.commons.validate.Validate");
+        topLevelClass.addAnnotation("@Setter");
+        topLevelClass.addAnnotation("@Getter");
+        Field field=new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setName("ids");
+        field.addAnnotation("@Validate(minLength = 1)");
+        field.setType(new FullyQualifiedJavaType("java.util.List<Long>"));
+        field.addJavaDocLine("/** "+introspectedTable.getRemarks()+"Id **/");
+        topLevelClass.addField(field);
+
+        field=new Field();
+        field.setVisibility(JavaVisibility.PRIVATE);
+        field.setName("updatePerson");
+        field.addAnnotation("@Validate(isNotBlank = true)");
+        field.setType(new FullyQualifiedJavaType("java.lang.String"));
+        field.addJavaDocLine("/** 变更人 **/");
+        topLevelClass.addField(field);
+
+        addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "操作DO");
         addJavaFileComment(topLevelClass);
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
         files.add(file);
@@ -214,40 +248,17 @@ public class MybatisServicePlugin extends PluginAdapter {
     protected void addPageDO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         // set implements interface
-        topLevelClass.addSuperInterface(new FullyQualifiedJavaType("cn.luban.commons.ro.PageQuery"));
+        topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.ro.PageQuery"));
         topLevelClass.addImportedType("cn.luban.commons.ro.PageQuery");
         topLevelClass.addImportedType("lombok.Setter");
         topLevelClass.addImportedType("lombok.Getter");
         topLevelClass.addAnnotation("@Setter");
         topLevelClass.addAnnotation("@Getter");
-        addDOComment(topLevelClass,introspectedTable);
+        addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "分页DO");
         addJavaFileComment(topLevelClass);
 
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
         files.add(file);
-    }
-
-    public void addDOComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
-        String username = System.getProperty("user.name");
-        String dateStr = "";
-        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if (hour >= 0 && hour <= 12) {
-            dateStr = dateFormat1.format(new Date());
-        } else {
-            dateStr = dateFormat2.format(new Date());
-        }
-        StringBuilder sb = new StringBuilder();
-        innerClass.addJavaDocLine("/**");
-        sb.append(" * ");
-        sb.append(introspectedTable.getRemarks() + "操作DO");
-        sb.append("\n");
-        sb.append(" * ");
-        sb.append("\n");
-        sb.append(" * ");
-        sb.append("@author ").append(username).append("\n");
-        sb.append(" * ").append("@version ").append(String.format("$: %s.java, v 0.1 %s %s Exp $ ", innerClass.getType().getShortName(), dateStr, username));
-        innerClass.addJavaDocLine(sb.toString());
-        innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
     /**
@@ -269,13 +280,36 @@ public class MybatisServicePlugin extends PluginAdapter {
         // add import dao
         addField(topLevelClass, tableName);
         // add method
-        topLevelClass.addMethod(queryById(introspectedTable, tableName,true));
-        topLevelClass.addMethod(add(introspectedTable, tableName,true));
-        topLevelClass.addMethod(pageQuery(introspectedTable, tableName,true));
-        topLevelClass.addMethod(getOtherboolean("deleteById", introspectedTable, tableName,true));
-        topLevelClass.addMethod(getOtherboolean("batchDeleteById", introspectedTable, tableName,true));
-        topLevelClass.addMethod(getOtherboolean("updateByParams", introspectedTable, tableName,true));
-        topLevelClass.addMethod(getOtherboolean("updateById", introspectedTable, tableName,true));
+
+        String remarks = introspectedTable.getRemarks();
+        Method method = queryById(introspectedTable, tableName, true);
+        addMethodComment(method,"根据ID查询"+remarks+"信息",method.getParameters().get(0).getName(),remarks+"ID",remarks+"信息");
+        topLevelClass.addMethod(method);
+
+        method = pageQuery(introspectedTable, tableName, true);
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
+        topLevelClass.addMethod(method);
+
+        method = add(introspectedTable, tableName, true);
+        addMethodComment(method, "添加" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "记录ID");
+        topLevelClass.addMethod(method);
+
+
+        method = getOtherboolean(("updateById"), introspectedTable, tableName, true);
+        addMethodComment(method, "更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
+        topLevelClass.addMethod(method);
+
+        method = getOtherboolean(("updateByParams"), introspectedTable, tableName, true);
+        addMethodComment(method, "选择更新" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "更新信息", "成功或失败");
+        topLevelClass.addMethod(method);
+
+        method = getOtherboolean(("deleteById"), introspectedTable, tableName, true);
+        addMethodComment(method, "根据ID删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
+        topLevelClass.addMethod(method);
+
+        method = getOtherboolean(("batchDeleteById"), introspectedTable, tableName, true);
+        addMethodComment(method, "根据ID批量删除" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "删除对象", "成功或失败");
+        topLevelClass.addMethod(method);
 
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
         files.add(file);
@@ -300,12 +334,11 @@ public class MybatisServicePlugin extends PluginAdapter {
     /**
      * 添加方法
      */
-    protected Method queryById(IntrospectedTable introspectedTable, String tableName,boolean f) {
+    protected Method queryById(IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
         method.setName("queryById");
         method.setReturnType(pojoType);
-        if(f)
-            method.addAnnotation("@Override");
+        if (f) method.addAnnotation("@Override");
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(introspectedTable.getPrimaryKeyType());
             method.addParameter(new Parameter(type, "key"));
@@ -332,18 +365,17 @@ public class MybatisServicePlugin extends PluginAdapter {
     }
 
     /** 分页 **/
-    protected Method pageQuery(IntrospectedTable introspectedTable, String tableName,boolean f) {
+    protected Method pageQuery(IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
         method.setName("pageQuery");
         method.setReturnType(pageRTDOType);
-        if(f)
-            method.addAnnotation("@Override");
+        if (f) method.addAnnotation("@Override");
         method.addParameter(new Parameter(pageDOType, "pageDO"));
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("PageHelper.startPage(pageDO.getPageNo(), pageDO.getPageSize());");
         sb.append("\n");
-        sb.append("\t\tPage<" + pojoType.getShortName() + "> page = this." + getDaoShort() + ".queryPage(pageDO);");
+        sb.append("\t\tPage<" + pojoType.getShortName() + "> page = this." + getDaoShort() + "queryPage(pageDO);");
         sb.append("\n");
         sb.append("\t\tPageData<" + pojoType.getShortName() + "> pageData = ObjectUtils.copy(pageDO, PageData.class);");
         sb.append("\n");
@@ -360,13 +392,12 @@ public class MybatisServicePlugin extends PluginAdapter {
 
     private static FullyQualifiedJavaType longInstance = new FullyQualifiedJavaType("java.lang.Long");
 
-    protected Method add(IntrospectedTable introspectedTable, String tableName,boolean f) {
+    protected Method add(IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
         method.setName("add");
-        if(f)
-            method.addAnnotation("@Override");
+        if (f) method.addAnnotation("@Override");
         method.setReturnType(longInstance);
-        method.addParameter(new Parameter(pojoType,toLowerCase(pojoType.getShortName())));
+        method.addParameter(new Parameter(pojoType, toLowerCase(pojoType.getShortName())));
 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
@@ -379,7 +410,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         sb.append("\n");
         sb.append("\t\tif (flag) {");
         sb.append("\n");
-        sb.append("\t\t\t").append("return "+toLowerCase(pojoType.getShortName())+".getId();");
+        sb.append("\t\t\t").append("return " + toLowerCase(pojoType.getShortName()) + ".getId();");
         sb.append("\n");
         sb.append("\t\t}");
         sb.append("\n");
@@ -392,22 +423,21 @@ public class MybatisServicePlugin extends PluginAdapter {
     /**
      * add method
      */
-    protected Method getOtherboolean(String methodName, IntrospectedTable introspectedTable, String tableName,boolean f) {
+    protected Method getOtherboolean(String methodName, IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
         method.setName(methodName);
-        if(f)
-            method.addAnnotation("@Override");
+        if (f) method.addAnnotation("@Override");
         method.setReturnType(FullyQualifiedJavaType.getBooleanPrimitiveInstance());
-        if(methodName.equals("updateById")||methodName.equals("updateByParams")){
-            method.addParameter(new Parameter(pojoType,toLowerCase(pojoType.getShortName())));
-        }else if(methodName.equals("queryById")){
+        if (methodName.equals("updateById") || methodName.equals("updateByParams")) {
+            method.addParameter(new Parameter(pojoType, toLowerCase(pojoType.getShortName())));
+        } else if (methodName.equals("queryById")) {
             for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
                 FullyQualifiedJavaType type = introspectedColumn.getFullyQualifiedJavaType();
                 method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
             }
-        }else if(methodName.equals("deleteById")){
+        } else if (methodName.equals("deleteById")) {
             method.addParameter(new Parameter(uptDOType, toLowerCase(uptDOType.getShortName())));
-        }else if(methodName.equals("batchDeleteById")){
+        } else if (methodName.equals("batchDeleteById")) {
             method.addParameter(new Parameter(uptBatDOType, toLowerCase(uptBatDOType.getShortName())));
         }
 
@@ -417,13 +447,13 @@ public class MybatisServicePlugin extends PluginAdapter {
         sb.append(getDaoShort());
         sb.append(methodName);
         sb.append("(");
-        if(methodName.equals("updateById")||methodName.equals("updateByParams")){
+        if (methodName.equals("updateById") || methodName.equals("updateByParams")) {
             sb.append(toLowerCase(pojoType.getShortName()));
-        }else if(methodName.equals("queryById")){
+        } else if (methodName.equals("queryById")) {
             sb.append("id");
-        }else if(methodName.equals("deleteById")){
+        } else if (methodName.equals("deleteById")) {
             sb.append(toLowerCase(uptDOType.getShortName()));
-        }else if(methodName.equals("batchDeleteById")){
+        } else if (methodName.equals("batchDeleteById")) {
             sb.append(toLowerCase(uptBatDOType.getShortName()));
         }
 

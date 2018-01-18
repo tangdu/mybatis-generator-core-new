@@ -77,13 +77,15 @@
     <javaFacadeGenerator targetPackage="com.xn.user.facade"
                           implementationPackage="com.xn.user.facade.impl"
                           targetProject="/Users/tangdu/git/mybatis-generator-core/src/test/java"
+                         stateCodePackage="MAVEN"
     ></javaFacadeGenerator>
 
     <!-- sql占位符，表示所有的表 -->
 
-    <table tableName="T_USER">
+    <table tableName="t_user">
       <generatedKey column="id" sqlStatement="Mysql" identity="true" />
       <domainObjectRenamingRule searchString="^T" replaceString="" />
+
     </table>
   </context>
 </generatorConfiguration>
