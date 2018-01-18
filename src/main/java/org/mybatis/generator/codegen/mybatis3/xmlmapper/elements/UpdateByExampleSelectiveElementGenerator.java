@@ -56,6 +56,9 @@ public class UpdateByExampleSelectiveElementGenerator extends
 
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable
                 .getAllColumns())) {
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty("record.")); //$NON-NLS-1$
             sb.append(" != null"); //$NON-NLS-1$

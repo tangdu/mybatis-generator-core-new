@@ -65,6 +65,9 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
 
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable
                 .getNonPrimaryKeyColumns())) {
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(" != null"); //$NON-NLS-1$
@@ -86,6 +89,10 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends
         boolean and = false;
         for (IntrospectedColumn introspectedColumn : introspectedTable
                 .getPrimaryKeyColumns()) {
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
+
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$

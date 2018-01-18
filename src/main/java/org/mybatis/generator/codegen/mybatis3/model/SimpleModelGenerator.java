@@ -83,7 +83,8 @@ public class SimpleModelGenerator extends AbstractJavaGenerator {
                     introspectedColumn, introspectedTable,
                     Plugin.ModelClassType.BASE_RECORD)) {
                 if(field.getName().equals("createTime")||field.getName().equals("createPerson")||
-                        field.getName().equals("updateTime")||field.getName().equals("updatePerson")){
+                        field.getName().equals("updateTime")||field.getName().equals("updatePerson")
+                        ||field.getName().equals("isDelete")){
                     continue;
                 }
                 topLevelClass.addField(field);

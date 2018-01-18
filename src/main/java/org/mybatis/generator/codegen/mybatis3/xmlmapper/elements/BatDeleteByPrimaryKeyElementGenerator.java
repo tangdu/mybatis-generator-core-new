@@ -15,12 +15,10 @@
  */
 package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
 
-import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
-import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
 
 /**
  * 
@@ -62,37 +60,17 @@ public class BatDeleteByPrimaryKeyElementGenerator extends
         answer.addElement(new TextElement(sb.toString()));
         XmlElement dynamicElement = new XmlElement("where");
         StringBuilder sb2 = new StringBuilder();
-        sb2.append("\tid in");
+        //sb2.append("\tis_delete=0");
+        sb2.append("\tand id in");
         sb2.append("\n");
         sb2.append("\t\t<foreach collection=\"ids\" item=\"item\" index=\"index\" open=\"(\" separator=\",\" close=\")\">");
         sb2.append("\n");
         sb2.append("\t\t\t#{item}");
         sb2.append("\n");
         sb2.append("\t\t</foreach>");
-        sb2.append("\n");
-        sb2.append("\t\tand is_delete=0");
 
         dynamicElement.addElement(new TextElement(sb2.toString()));
         answer.addElement(dynamicElement);
-
-        boolean and = false;
-        for (IntrospectedColumn introspectedColumn : introspectedTable
-                .getPrimaryKeyColumns()) {
-            sb.setLength(0);
-            if (and) {
-                sb.append("  and "); //$NON-NLS-1$
-            } else {
-                sb.append("where "); //$NON-NLS-1$
-                and = true;
-            }
-
-            sb.append(MyBatis3FormattingUtilities
-                    .getEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(MyBatis3FormattingUtilities
-                    .getParameterClause(introspectedColumn));
-            answer.addElement(new TextElement(sb.toString()));
-        }
 
         if (context.getPlugins()
                 .sqlMapDeleteByPrimaryKeyElementGenerated(answer,

@@ -89,8 +89,12 @@ public class SimpleSelectAllElementGenerator extends
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement dynamicElement = new XmlElement("where"); //$NON-NLS-1$
+        dynamicElement.addElement(new TextElement("is_delete=0 "));
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable
                 .getNonPrimaryKeyColumns())) {
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(" != null"); //$NON-NLS-1$
@@ -99,6 +103,7 @@ public class SimpleSelectAllElementGenerator extends
             dynamicElement.addElement(isNotNullElement);
 
             sb.setLength(0);
+            sb.append(" and ");
             sb.append(MyBatis3FormattingUtilities
                     .getEscapedColumnName(introspectedColumn));
             sb.append(" = "); //$NON-NLS-1$
@@ -108,7 +113,7 @@ public class SimpleSelectAllElementGenerator extends
 
             isNotNullElement.addElement(new TextElement(sb.toString()));
         }
-        
+
         answer.addElement(dynamicElement);
         String orderByClause = introspectedTable.getTableConfigurationProperty(PropertyRegistry.TABLE_SELECT_ALL_ORDER_BY_CLAUSE);
         boolean hasOrderBy = StringUtility.stringHasValue(orderByClause);

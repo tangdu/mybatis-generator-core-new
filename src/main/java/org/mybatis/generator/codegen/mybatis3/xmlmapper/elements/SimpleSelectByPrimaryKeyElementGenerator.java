@@ -102,7 +102,7 @@ public class SimpleSelectByPrimaryKeyElementGenerator extends
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
             } else {
-                sb.append("where "); //$NON-NLS-1$
+                sb.append("where is_delete=0 and "); //$NON-NLS-1$
                 and = true;
             }
 

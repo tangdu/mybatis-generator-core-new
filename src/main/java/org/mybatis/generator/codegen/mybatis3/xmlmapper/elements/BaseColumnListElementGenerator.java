@@ -15,13 +15,13 @@
  */
 package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
 
-import java.util.Iterator;
-
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
+
+import java.util.Iterator;
 
 /**
  * 
@@ -47,8 +47,11 @@ public class BaseColumnListElementGenerator extends AbstractXmlElementGenerator 
         Iterator<IntrospectedColumn> iter = introspectedTable
                 .getNonBLOBColumns().iterator();
         while (iter.hasNext()) {
-            sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(iter
-                    .next()));
+            IntrospectedColumn introspectedColumn=iter.next();
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
+            sb.append(MyBatis3FormattingUtilities.getSelectListPhrase(introspectedColumn));
 
             if (iter.hasNext()) {
                 sb.append(", "); //$NON-NLS-1$

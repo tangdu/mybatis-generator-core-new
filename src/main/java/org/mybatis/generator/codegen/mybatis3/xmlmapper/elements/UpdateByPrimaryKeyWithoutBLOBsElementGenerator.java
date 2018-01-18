@@ -15,8 +15,6 @@
  */
 package org.mybatis.generator.codegen.mybatis3.xmlmapper.elements;
 
-import java.util.Iterator;
-
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.dom.OutputUtilities;
 import org.mybatis.generator.api.dom.xml.Attribute;
@@ -24,6 +22,8 @@ import org.mybatis.generator.api.dom.xml.TextElement;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.codegen.mybatis3.ListUtilities;
 import org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities;
+
+import java.util.Iterator;
 
 /**
  * 
@@ -68,6 +68,9 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
         }
         while (iter.hasNext()) {
             IntrospectedColumn introspectedColumn = iter.next();
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
 
             sb.append(MyBatis3FormattingUtilities
                     .getEscapedColumnName(introspectedColumn));
@@ -91,6 +94,9 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends
         boolean and = false;
         for (IntrospectedColumn introspectedColumn : introspectedTable
                 .getPrimaryKeyColumns()) {
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
             sb.setLength(0);
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$

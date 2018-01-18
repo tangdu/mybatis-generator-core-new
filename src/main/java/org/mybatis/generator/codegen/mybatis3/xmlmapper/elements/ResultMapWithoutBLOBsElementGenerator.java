@@ -101,6 +101,10 @@ public class ResultMapWithoutBLOBsElementGenerator extends
             columns = introspectedTable.getBaseColumns();
         }
         for (IntrospectedColumn introspectedColumn : columns) {
+            if(introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")){
+                continue;
+            }
+
             XmlElement resultElement = new XmlElement("result"); //$NON-NLS-1$
 
             resultElement
