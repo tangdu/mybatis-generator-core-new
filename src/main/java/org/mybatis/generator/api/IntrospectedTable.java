@@ -518,7 +518,7 @@ public abstract class IntrospectedTable {
 
         setCountByExampleStatementId("countByExample"); //$NON-NLS-1$
         setDeleteByExampleStatementId("deleteByExample"); //$NON-NLS-1$
-        setDeleteByPrimaryKeyStatementId("deleteById"); //$NON-NLS-1$
+        setDeleteByPrimaryKeyStatementId("deleteRow"); //$NON-NLS-1$
         setBatDeleteByPrimaryKeyStatementId("batchDeleteById"); //$NON-NLS-1$
         setDelete2ByPrimaryKeyStatementId("deleteById");
 
