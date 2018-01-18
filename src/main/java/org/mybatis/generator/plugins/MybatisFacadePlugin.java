@@ -349,7 +349,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         sb.append("\n");
         sb.append("\t\t}");
         sb.append("\n");
-        sb.append("\t\treturn Results.failed(UserStateCode.USER_NOT_FOUND);");
+        sb.append("\t\treturn Results.failed("+statecodeType.getShortName()+"."+(pojoType.getShortName()).toUpperCase()+"_NOT_FOUND);");
         method.addBodyLine(sb.toString());
         return method;
     }
@@ -479,7 +479,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.addImportedType("cn.luban.commons.result.Result");
         topLevelClass.addImportedType("cn.luban.commons.validate.ValidateTools");
         topLevelClass.addImportedType("cn.luban.commons.ro.PageData");
-        topLevelClass.addImportedType("cn.xnh.datacenter.user.facade.statecode.UserStateCode");
+        topLevelClass.addImportedType(statecodeType);
         topLevelClass.addImportedType(slf4jLoggerFactory);
         topLevelClass.addImportedType(service);
         topLevelClass.addImportedType(autowired);
