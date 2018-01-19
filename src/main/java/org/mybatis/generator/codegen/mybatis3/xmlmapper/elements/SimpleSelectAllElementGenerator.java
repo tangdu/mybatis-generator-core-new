@@ -100,7 +100,6 @@ public class SimpleSelectAllElementGenerator extends AbstractXmlElementGenerator
             sb.append(MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
             sb.append(" = "); //$NON-NLS-1$
             sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn));
-            sb.append(',');
 
             isNotNullElement.addElement(new TextElement(sb.toString()));
         }
