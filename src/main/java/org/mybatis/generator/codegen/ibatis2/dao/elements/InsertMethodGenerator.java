@@ -1,38 +1,32 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.codegen.ibatis2.dao.elements;
+
+import org.mybatis.generator.api.DAOMethodNameCalculator;
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.java.*;
 
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.mybatis.generator.api.DAOMethodNameCalculator;
-import org.mybatis.generator.api.IntrospectedColumn;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.Interface;
-import org.mybatis.generator.api.dom.java.JavaVisibility;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.Parameter;
-import org.mybatis.generator.api.dom.java.PrimitiveTypeWrapper;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
-
 /**
  * Generates the Insert method.
- * 
+ *
  * @author Jeff Butler
- * 
+ *
  */
 public class InsertMethodGenerator extends AbstractDAOElementGenerator {
 
@@ -59,9 +53,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
             sb.append("Object newKey = "); //$NON-NLS-1$
         }
 
-        sb.append(daoTemplate.getInsertMethod(introspectedTable
-                .getIbatis2SqlMapNamespace(), introspectedTable
-                .getInsertStatementId(), "record")); //$NON-NLS-1$
+        sb.append(daoTemplate.getInsertMethod(introspectedTable.getIbatis2SqlMapNamespace(), introspectedTable.getInsertStatementId(), "record")); //$NON-NLS-1$
         method.addBodyLine(sb.toString());
 
         if (returnType != null) {
@@ -72,8 +64,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
                 sb.setLength(0);
 
                 if (returnType.isPrimitive()) {
-                    PrimitiveTypeWrapper ptw = returnType
-                            .getPrimitiveTypeWrapper();
+                    PrimitiveTypeWrapper ptw = returnType.getPrimitiveTypeWrapper();
                     sb.append("return (("); //$NON-NLS-1$
                     sb.append(ptw.getShortName());
                     sb.append(") newKey"); //$NON-NLS-1$
@@ -90,8 +81,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
             }
         }
 
-        if (context.getPlugins().clientInsertMethodGenerated(method,
-                topLevelClass, introspectedTable)) {
+        if (context.getPlugins().clientInsertMethodGenerated(method, topLevelClass, introspectedTable)) {
             topLevelClass.addImportedTypes(importedTypes);
             topLevelClass.addMethod(method);
         }
@@ -102,8 +92,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
         Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
         Method method = getMethodShell(importedTypes);
 
-        if (context.getPlugins().clientInsertMethodGenerated(method,
-                interfaze, introspectedTable)) {
+        if (context.getPlugins().clientInsertMethodGenerated(method, interfaze, introspectedTable)) {
             interfaze.addImportedTypes(importedTypes);
             interfaze.addMethod(method);
         }
@@ -114,8 +103,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
 
         FullyQualifiedJavaType returnType;
         if (introspectedTable.getGeneratedKey() != null) {
-            IntrospectedColumn introspectedColumn = introspectedTable
-                    .getColumn(introspectedTable.getGeneratedKey().getColumn());
+            IntrospectedColumn introspectedColumn = introspectedTable.getColumn(introspectedTable.getGeneratedKey().getColumn());
             if (introspectedColumn == null) {
                 // the specified column doesn't exist, so don't do the generated
                 // key
@@ -132,11 +120,9 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
         method.setReturnType(returnType);
         method.setVisibility(JavaVisibility.PUBLIC);
         DAOMethodNameCalculator methodNameCalculator = getDAOMethodNameCalculator();
-        method.setName(methodNameCalculator
-                .getInsertMethodName(introspectedTable));
+        method.setName(methodNameCalculator.getInsertMethodName(introspectedTable));
 
-        FullyQualifiedJavaType parameterType = introspectedTable.getRules()
-                .calculateAllFieldsClass();
+        FullyQualifiedJavaType parameterType = introspectedTable.getRules().calculateAllFieldsClass();
 
         importedTypes.add(parameterType);
         method.addParameter(new Parameter(parameterType, "record")); //$NON-NLS-1$
@@ -146,8 +132,7 @@ public class InsertMethodGenerator extends AbstractDAOElementGenerator {
             importedTypes.add(fqjt);
         }
 
-        context.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable);
+        context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
 
         return method;
     }

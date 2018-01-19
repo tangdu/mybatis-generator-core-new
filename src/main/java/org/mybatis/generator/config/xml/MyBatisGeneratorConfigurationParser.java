@@ -814,7 +814,7 @@ public class MyBatisGeneratorConfigurationParser {
      *
      * @param key property key
      * @return the resolved property.  This method will return null if the property is
-     *     undefined in any of the sources.
+     * undefined in any of the sources.
      */
     private String resolveProperty(String key) {
         String property = null;

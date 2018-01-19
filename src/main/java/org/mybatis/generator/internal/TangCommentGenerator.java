@@ -26,8 +26,8 @@ public class TangCommentGenerator implements CommentGenerator {
 
     private boolean suppressDate;
 
-    private SimpleDateFormat dateFormat1=new SimpleDateFormat("yyyy年MM月dd日 上午HH:mm");
-    private SimpleDateFormat dateFormat2=new SimpleDateFormat("yyyy年MM月dd日 下午HH:mm");
+    private SimpleDateFormat dateFormat1 = new SimpleDateFormat("yyyy年MM月dd日 上午HH:mm");
+    private SimpleDateFormat dateFormat2 = new SimpleDateFormat("yyyy年MM月dd日 下午HH:mm");
 
     public TangCommentGenerator() {
         super();
@@ -79,21 +79,19 @@ public class TangCommentGenerator implements CommentGenerator {
     @Override
     public void addConfigurationProperties(Properties properties) {
         this.properties.putAll(properties);
-        suppressDate = isTrue(properties
-                .getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE));
+        suppressDate = isTrue(properties.getProperty(PropertyRegistry.COMMENT_GENERATOR_SUPPRESS_DATE));
     }
 
 
     @Override
-    public void addClassComment(InnerClass innerClass,
-                                IntrospectedTable introspectedTable) {
-        String username=System.getProperty("user.name");
-        String dateStr="";
-        int hour= Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
-        if(hour>=0 && hour<=12){
-            dateStr=dateFormat1.format(new Date());
-        }else{
-            dateStr=dateFormat2.format(new Date());
+    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable) {
+        String username = System.getProperty("user.name");
+        String dateStr = "";
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        if (hour >= 0 && hour <= 12) {
+            dateStr = dateFormat1.format(new Date());
+        } else {
+            dateStr = dateFormat2.format(new Date());
         }
         StringBuilder sb = new StringBuilder();
         innerClass.addJavaDocLine("/**");
@@ -105,28 +103,23 @@ public class TangCommentGenerator implements CommentGenerator {
         sb.append("\n");
         sb.append(" * ");
         sb.append("@author ").append(username).append("\n");
-        sb.append(" * ").append("@version ")
-                .append(String.format("$: %s.java, v 0.1 %s %s Exp $ ",
-                        introspectedTable.getFullyQualifiedTable().getDomainObjectName(),dateStr,username));
+        sb.append(" * ").append("@version ").append(String.format("$: %s.java, v 0.1 %s %s Exp $ ", introspectedTable.getFullyQualifiedTable().getDomainObjectName(), dateStr, username));
         innerClass.addJavaDocLine(sb.toString());
         innerClass.addJavaDocLine(" */"); //$NON-NLS-1$
     }
 
     @Override
-    public void addClassComment(InnerClass innerClass,
-                                IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
-        addClassComment(innerClass,introspectedTable);
+    public void addClassComment(InnerClass innerClass, IntrospectedTable introspectedTable, boolean markAsDoNotDelete) {
+        addClassComment(innerClass, introspectedTable);
     }
 
     @Override
-    public void addModelClassComment(TopLevelClass topLevelClass,
-                                     IntrospectedTable introspectedTable) {
-        addClassComment(topLevelClass,introspectedTable);
+    public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        addClassComment(topLevelClass, introspectedTable);
     }
 
     @Override
-    public void addEnumComment(InnerEnum innerEnum,
-                               IntrospectedTable introspectedTable) {
+    public void addEnumComment(InnerEnum innerEnum, IntrospectedTable introspectedTable) {
         StringBuilder sb = new StringBuilder();
         sb.append("/** ");
         sb.append(introspectedTable.getFullyQualifiedTable());
@@ -135,9 +128,7 @@ public class TangCommentGenerator implements CommentGenerator {
     }
 
     @Override
-    public void addFieldComment(Field field,
-                                IntrospectedTable introspectedTable,
-                                IntrospectedColumn introspectedColumn) {
+    public void addFieldComment(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
         StringBuilder sb = new StringBuilder();
         sb.append("/**");
         sb.append(introspectedColumn.getRemarks());
@@ -155,8 +146,7 @@ public class TangCommentGenerator implements CommentGenerator {
     }
 
     @Override
-    public void addGeneralMethodComment(Method method,
-                                        IntrospectedTable introspectedTable) {
+    public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
 //        String username=System.getProperty("user.name");
 //        method.addJavaDocLine("/**");
 //        method.addJavaDocLine("* @author "+username);
@@ -164,16 +154,12 @@ public class TangCommentGenerator implements CommentGenerator {
     }
 
     @Override
-    public void addGetterComment(Method method,
-                                 IntrospectedTable introspectedTable,
-                                 IntrospectedColumn introspectedColumn) {
+    public void addGetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
 
     }
 
     @Override
-    public void addSetterComment(Method method,
-                                 IntrospectedTable introspectedTable,
-                                 IntrospectedColumn introspectedColumn) {
+    public void addSetterComment(Method method, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
 
     }
 }

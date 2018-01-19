@@ -1,17 +1,17 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.codegen.mybatis3.javamapper.elements;
 
@@ -27,19 +27,17 @@ import static org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
 
 /**
- * 
+ *
  * @author Jeff Butler
  */
-public abstract class AbstractJavaMapperMethodGenerator extends
-        AbstractGenerator {
-    public abstract void addInterfaceElements(Interface interfaze);
-
+public abstract class AbstractJavaMapperMethodGenerator extends AbstractGenerator {
     public AbstractJavaMapperMethodGenerator() {
         super();
     }
-    
-    protected String getResultAnnotation(Interface interfaze, IntrospectedColumn introspectedColumn,
-            boolean idColumn, boolean constructorBased) {
+
+    public abstract void addInterfaceElements(Interface interfaze);
+
+    protected String getResultAnnotation(Interface interfaze, IntrospectedColumn introspectedColumn, boolean idColumn, boolean constructorBased) {
         StringBuilder sb = new StringBuilder();
         if (constructorBased) {
             interfaze.addImportedType(introspectedColumn.getFullyQualifiedJavaType());
@@ -57,8 +55,7 @@ public abstract class AbstractJavaMapperMethodGenerator extends
         }
 
         if (stringHasValue(introspectedColumn.getTypeHandler())) {
-            FullyQualifiedJavaType fqjt =
-                    new FullyQualifiedJavaType(introspectedColumn.getTypeHandler());
+            FullyQualifiedJavaType fqjt = new FullyQualifiedJavaType(introspectedColumn.getTypeHandler());
             interfaze.addImportedType(fqjt);
             sb.append(", typeHandler="); //$NON-NLS-1$
             sb.append(fqjt.getShortName());
@@ -99,6 +96,7 @@ public abstract class AbstractJavaMapperMethodGenerator extends
             }
         }
     }
+
     protected String toLowerCase(String tableName) {
         StringBuilder sb = new StringBuilder(tableName);
         sb.setCharAt(0, Character.toLowerCase(sb.charAt(0)));
@@ -109,18 +107,16 @@ public abstract class AbstractJavaMapperMethodGenerator extends
         IntrospectedColumn introspectedColumn = introspectedTable.getColumn(gk.getColumn());
         if (introspectedColumn != null) {
             if (gk.isJdbcStandard()) {
-                interfaze.addImportedType(
-                        new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options")); //$NON-NLS-1$
+                interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options")); //$NON-NLS-1$
             } else {
-                interfaze.addImportedType(
-                        new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectKey")); //$NON-NLS-1$
+                interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectKey")); //$NON-NLS-1$
                 FullyQualifiedJavaType fqjt = introspectedColumn.getFullyQualifiedJavaType();
                 interfaze.addImportedType(fqjt);
             }
         }
     }
 
-    protected String getTableRemark(){
+    protected String getTableRemark() {
         return this.introspectedTable.getRemarks();
     }
 

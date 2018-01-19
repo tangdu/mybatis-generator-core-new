@@ -1,17 +1,17 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.codegen.ibatis2;
 
@@ -43,15 +43,12 @@ public class Ibatis2FormattingUtilities {
      *            the introspected column
      * @return the escaped column name
      */
-    public static String getEscapedColumnName(
-            IntrospectedColumn introspectedColumn) {
+    public static String getEscapedColumnName(IntrospectedColumn introspectedColumn) {
         StringBuilder sb = new StringBuilder();
-        sb.append(escapeStringForIbatis2(introspectedColumn
-                .getActualColumnName()));
+        sb.append(escapeStringForIbatis2(introspectedColumn.getActualColumnName()));
 
         if (introspectedColumn.isColumnNameDelimited()) {
-            sb.insert(0, introspectedColumn.getContext()
-                    .getBeginningDelimiter());
+            sb.insert(0, introspectedColumn.getContext().getBeginningDelimiter());
             sb.append(introspectedColumn.getContext().getEndingDelimiter());
         }
 
@@ -65,8 +62,7 @@ public class Ibatis2FormattingUtilities {
      *            the introspected column
      * @return the aliased escaped column name
      */
-    public static String getAliasedEscapedColumnName(
-            IntrospectedColumn introspectedColumn) {
+    public static String getAliasedEscapedColumnName(IntrospectedColumn introspectedColumn) {
         if (stringHasValue(introspectedColumn.getTableAlias())) {
             StringBuilder sb = new StringBuilder();
 
@@ -86,8 +82,7 @@ public class Ibatis2FormattingUtilities {
      *            the introspected column
      * @return the parameter clause
      */
-    public static String getParameterClause(
-            IntrospectedColumn introspectedColumn) {
+    public static String getParameterClause(IntrospectedColumn introspectedColumn) {
         return getParameterClause(introspectedColumn, null);
     }
 
@@ -100,8 +95,7 @@ public class Ibatis2FormattingUtilities {
      *            the prefix
      * @return the parameter clause
      */
-    public static String getParameterClause(
-            IntrospectedColumn introspectedColumn, String prefix) {
+    public static String getParameterClause(IntrospectedColumn introspectedColumn, String prefix) {
         StringBuilder sb = new StringBuilder();
 
         sb.append('#');
@@ -130,21 +124,18 @@ public class Ibatis2FormattingUtilities {
      *            the introspected column
      * @return the proper phrase
      */
-    public static String getSelectListPhrase(
-            IntrospectedColumn introspectedColumn) {
+    public static String getSelectListPhrase(IntrospectedColumn introspectedColumn) {
         if (stringHasValue(introspectedColumn.getTableAlias())) {
             StringBuilder sb = new StringBuilder();
 
             sb.append(getAliasedEscapedColumnName(introspectedColumn));
             sb.append(" as "); //$NON-NLS-1$
             if (introspectedColumn.isColumnNameDelimited()) {
-                sb.append(introspectedColumn.getContext()
-                        .getBeginningDelimiter());
+                sb.append(introspectedColumn.getContext().getBeginningDelimiter());
             }
             sb.append(introspectedColumn.getTableAlias());
             sb.append('_');
-            sb.append(escapeStringForIbatis2(introspectedColumn
-                    .getActualColumnName()));
+            sb.append(escapeStringForIbatis2(introspectedColumn.getActualColumnName()));
             if (introspectedColumn.isColumnNameDelimited()) {
                 sb.append(introspectedColumn.getContext().getEndingDelimiter());
             }
@@ -182,7 +173,7 @@ public class Ibatis2FormattingUtilities {
      * The aliased column name for a select statement generated by the example clauses. This is not appropriate for
      * selects in SqlMaps because the column is not escaped for iBATIS. If there is a table alias, the value will be
      * alias.columnName.
-     * 
+     *
      * <p>This method is used in the Example classes and the returned value will be in a Java string. So we need
      * to escape double quotes if they are the delimiters.
      *
@@ -190,8 +181,7 @@ public class Ibatis2FormattingUtilities {
      *            the introspected column
      * @return the aliased column name
      */
-    public static String getAliasedActualColumnName(
-            IntrospectedColumn introspectedColumn) {
+    public static String getAliasedActualColumnName(IntrospectedColumn introspectedColumn) {
         StringBuilder sb = new StringBuilder();
         if (stringHasValue(introspectedColumn.getTableAlias())) {
             sb.append(introspectedColumn.getTableAlias());
@@ -199,15 +189,13 @@ public class Ibatis2FormattingUtilities {
         }
 
         if (introspectedColumn.isColumnNameDelimited()) {
-            sb.append(escapeStringForJava(introspectedColumn
-                    .getContext().getBeginningDelimiter()));
+            sb.append(escapeStringForJava(introspectedColumn.getContext().getBeginningDelimiter()));
         }
 
         sb.append(introspectedColumn.getActualColumnName());
 
         if (introspectedColumn.isColumnNameDelimited()) {
-            sb.append(escapeStringForJava(introspectedColumn
-                    .getContext().getEndingDelimiter()));
+            sb.append(escapeStringForJava(introspectedColumn.getContext().getEndingDelimiter()));
         }
 
         return sb.toString();
@@ -221,8 +209,7 @@ public class Ibatis2FormattingUtilities {
      *            the introspected column
      * @return the renamed column name
      */
-    public static String getRenamedColumnNameForResultMap(
-            IntrospectedColumn introspectedColumn) {
+    public static String getRenamedColumnNameForResultMap(IntrospectedColumn introspectedColumn) {
         if (stringHasValue(introspectedColumn.getTableAlias())) {
             StringBuilder sb = new StringBuilder();
 

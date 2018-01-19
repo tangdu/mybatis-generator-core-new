@@ -18,11 +18,13 @@ import static org.mybatis.generator.internal.util.JavaBeansUtil.getJavaBeansFiel
  */
 public class MybatisFacadePlugin extends PluginAdapter {
 
+    private static FullyQualifiedJavaType longInstance = new FullyQualifiedJavaType("Result<Long>");
+    String entityName = "";
+    FullyQualifiedJavaType statecodeExtType = new FullyQualifiedJavaType("cn.luban.commons.result.StateCode");
     private FullyQualifiedJavaType slf4jLogger;
     private FullyQualifiedJavaType slf4jLoggerFactory;
     private FullyQualifiedJavaType serviceType;
     private FullyQualifiedJavaType facadeType;
-
     private FullyQualifiedJavaType daoType;
     private FullyQualifiedJavaType facadeInterfaceType;
     private FullyQualifiedJavaType pojoType;
@@ -31,11 +33,9 @@ public class MybatisFacadePlugin extends PluginAdapter {
     private FullyQualifiedJavaType returnType;
     private FullyQualifiedJavaType statecodeType;
     private FullyQualifiedJavaType roType;
-
     private FullyQualifiedJavaType uptROType;
     private FullyQualifiedJavaType pageDOType;
     private FullyQualifiedJavaType pageROType;
-
     private String servicePack;
     private String serviceImplPack;
     private String facadePack;
@@ -44,13 +44,20 @@ public class MybatisFacadePlugin extends PluginAdapter {
     private String roPackage;
     private String project;
     private String pojoUrl;
-    private FullyQualifiedJavaType resultType = new FullyQualifiedJavaType("cn.luban.commons.result.Result");
-    private FullyQualifiedJavaType listType=new FullyQualifiedJavaType("java.util.List");
+    private FullyQualifiedJavaType resultType       = new FullyQualifiedJavaType("cn.luban.commons.result.Result");
+    private FullyQualifiedJavaType listType         = new FullyQualifiedJavaType("java.util.List");
     private FullyQualifiedJavaType serializableType = new FullyQualifiedJavaType("java.io.Serializable");
     /**
      * 所有的方法
      */
     private List<Method> methods;
+
+    public MybatisFacadePlugin() {
+        super();
+        slf4jLogger = new FullyQualifiedJavaType("org.slf4j.Logger");
+        slf4jLoggerFactory = new FullyQualifiedJavaType("org.slf4j.LoggerFactory");
+        methods = new ArrayList<Method>();
+    }
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
@@ -69,13 +76,6 @@ public class MybatisFacadePlugin extends PluginAdapter {
         service = new FullyQualifiedJavaType("org.springframework.stereotype.Component");
     }
 
-    public MybatisFacadePlugin() {
-        super();
-        slf4jLogger = new FullyQualifiedJavaType("org.slf4j.Logger");
-        slf4jLoggerFactory = new FullyQualifiedJavaType("org.slf4j.LoggerFactory");
-        methods = new ArrayList<Method>();
-    }
-
     /**
      * 读取配置文件
      */
@@ -84,7 +84,6 @@ public class MybatisFacadePlugin extends PluginAdapter {
         return true;
     }
 
-    String entityName="";
     /**
      *
      */
@@ -93,7 +92,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         List<GeneratedJavaFile> files = new ArrayList<GeneratedJavaFile>();
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(this.pojoUrl + ".", "");
-        entityName=introspectedTable.getDomainReplaceObjectName();
+        entityName = introspectedTable.getDomainReplaceObjectName();
 
         facadeInterfaceType = new FullyQualifiedJavaType(facadePack + "." + entityName + "Facade");
         daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
@@ -105,7 +104,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         roType = new FullyQualifiedJavaType(roPackage + "." + entityName + "RO");
         pageROType = new FullyQualifiedJavaType(roPackage + "." + entityName + "PageQueryRO");
         pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + entityName + "PageQueryDO");
-        statecodeType = new FullyQualifiedJavaType(stateCodePackage + "." + entityName+ "StateCode");
+        statecodeType = new FullyQualifiedJavaType(stateCodePackage + "." + entityName + "StateCode");
 
         //导入操作类
         TopLevelClass pageDOTypeClss = new TopLevelClass(pageROType);
@@ -149,7 +148,6 @@ public class MybatisFacadePlugin extends PluginAdapter {
         compilationUnit.addFileCommentLine("* Copyright (c) 2017-2018 All Rights Reserved.");
         compilationUnit.addFileCommentLine("*/");
     }
-
 
     /**
      * add interface
@@ -201,8 +199,6 @@ public class MybatisFacadePlugin extends PluginAdapter {
         GeneratedJavaFile file = new GeneratedJavaFile(interface1, project, context.getJavaFormatter());
         files.add(file);
     }
-
-    FullyQualifiedJavaType statecodeExtType = new FullyQualifiedJavaType("cn.luban.commons.result.StateCode");
 
     protected void addStateCode(Interface inter, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         inter.setVisibility(JavaVisibility.PUBLIC);
@@ -256,7 +252,6 @@ public class MybatisFacadePlugin extends PluginAdapter {
         field.setInitializationString("new " + statecodeExtType.getShortName() + "(-200,\"" + desc + "\")");
         inter.addField(field);
     }
-
 
     /**
      * add implements class
@@ -370,7 +365,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         sb.append("\n");
 
         //先将查询对象转化
-        sb.append("\t\t"+pageDOType.getShortName()).append(" ").append(toLowerCase(pageDOType.getShortName())).append(" = ");
+        sb.append("\t\t" + pageDOType.getShortName()).append(" ").append(toLowerCase(pageDOType.getShortName())).append(" = ");
         sb.append("ObjectUtils.copy(").append(toLowerCase(pageROType.getShortName())).append(",");
         sb.append(pageDOType.getShortName()).append(".class);");
         sb.append("\n");
@@ -378,16 +373,14 @@ public class MybatisFacadePlugin extends PluginAdapter {
         sb.append("\t\tPageData<" + pojoType.getShortName() + "> " + wrapperName("%sPageData") + " = this." + getDaoShort() + "pageQuery(" + toLowerCase(pageDOType.getShortName()) + ");");
         sb.append("\n");
         //转化结果
-        sb.append("\t\tPageData<"+roType.getShortName()+"> pageData = ObjectUtils.copy("+wrapperName("%sPageData")+", PageData.class);");
+        sb.append("\t\tPageData<" + roType.getShortName() + "> pageData = ObjectUtils.copy(" + wrapperName("%sPageData") + ", PageData.class);");
         sb.append("\n");
-        sb.append("\t\tpageData.setResultList(ObjectUtils.copyList("+wrapperName("%sPageData") +".getResultList(), "+roType.getShortName()+".class));");
+        sb.append("\t\tpageData.setResultList(ObjectUtils.copyList(" + wrapperName("%sPageData") + ".getResultList(), " + roType.getShortName() + ".class));");
         sb.append("\n");
         sb.append("\t\treturn Results.success(pageData);");
         method.addBodyLine(sb.toString());
         return method;
     }
-
-    private static FullyQualifiedJavaType longInstance = new FullyQualifiedJavaType("Result<Long>");
 
     protected Method add(IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
@@ -522,15 +515,15 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.addImportedType("java.io.Serializable");
         topLevelClass.addImportedType("cn.luban.commons.validate.Validate");
         topLevelClass.addAnnotation("@Data");
-        Field field=new Field();
+        Field field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setName("id");
         field.addAnnotation("@Validate(required = true)");
         field.setType(new FullyQualifiedJavaType("java.lang.Long"));
-        field.addJavaDocLine("/** "+introspectedTable.getRemarks()+"Id **/");
+        field.addJavaDocLine("/** " + introspectedTable.getRemarks() + "Id **/");
         topLevelClass.addField(field);
 
-        field=new Field();
+        field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setName("updatePerson");
         field.addAnnotation("@Validate(isNotBlank = true)");

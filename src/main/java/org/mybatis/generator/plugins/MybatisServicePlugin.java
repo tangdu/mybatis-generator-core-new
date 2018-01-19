@@ -17,6 +17,7 @@ import static org.mybatis.generator.internal.util.JavaBeansUtil.getJavaBeansFiel
  */
 public class MybatisServicePlugin extends PluginAdapter {
 
+    private static FullyQualifiedJavaType longInstance     = new FullyQualifiedJavaType("java.lang.Long");
     private FullyQualifiedJavaType slf4jLogger;
     private FullyQualifiedJavaType slf4jLoggerFactory;
     private FullyQualifiedJavaType serviceType;
@@ -27,19 +28,23 @@ public class MybatisServicePlugin extends PluginAdapter {
     private FullyQualifiedJavaType autowired;
     private FullyQualifiedJavaType service;
     private FullyQualifiedJavaType returnType;
-
     private FullyQualifiedJavaType pageDOType;
-
     private String servicePack;
     private String serviceImplPack;
     private String project;
     private String pojoUrl;
     private        FullyQualifiedJavaType serializableType = new FullyQualifiedJavaType("java.io.Serializable");
-    private static FullyQualifiedJavaType longInstance     = new FullyQualifiedJavaType("java.lang.Long");
     /**
      * 所有的方法
      */
     private List<Method> methods;
+
+    public MybatisServicePlugin() {
+        super();
+        slf4jLogger = new FullyQualifiedJavaType("org.slf4j.Logger");
+        slf4jLoggerFactory = new FullyQualifiedJavaType("org.slf4j.LoggerFactory");
+        methods = new ArrayList<Method>();
+    }
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
@@ -50,13 +55,6 @@ public class MybatisServicePlugin extends PluginAdapter {
         this.pojoUrl = context.getJavaModelGeneratorConfiguration().getTargetPackage();
         autowired = new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired");
         service = new FullyQualifiedJavaType("org.springframework.stereotype.Service");
-    }
-
-    public MybatisServicePlugin() {
-        super();
-        slf4jLogger = new FullyQualifiedJavaType("org.slf4j.Logger");
-        slf4jLoggerFactory = new FullyQualifiedJavaType("org.slf4j.LoggerFactory");
-        methods = new ArrayList<Method>();
     }
 
     /**
@@ -75,7 +73,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         List<GeneratedJavaFile> files = new ArrayList<GeneratedJavaFile>();
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(this.pojoUrl + ".", "");
-        String entityName=introspectedTable.getDomainReplaceObjectName();
+        String entityName = introspectedTable.getDomainReplaceObjectName();
         interfaceType = new FullyQualifiedJavaType(servicePack + "." + entityName + "Service");
         daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
         serviceType = new FullyQualifiedJavaType(serviceImplPack + "." + entityName + "ServiceImpl");

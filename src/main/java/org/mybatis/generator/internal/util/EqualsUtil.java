@@ -1,29 +1,29 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.internal.util;
 
 /**
  * This class is from javapractices.com:
- * 
+ *
  * <p>http://www.javapractices.com/Topic17.cjp
- * 
+ *
  * <p>Collected methods which allow easy implementation of <code>equals</code>.
- * 
+ *
  * <p>Example use case in a class called Car:
- * 
+ *
  * <pre>
  * public boolean equals(Object that) {
  *     if (this == that)
@@ -38,7 +38,7 @@ package org.mybatis.generator.internal.util;
  *             &amp;&amp; Arrays.equals(this.fMaintenanceChecks, that.fMaintenanceChecks); //array!
  * }
  * </pre>
- * 
+ *
  * <em>Arrays are not handled by this class</em>. This is because the
  * <code>Arrays.equals</code> methods should be used for array fields.
  */
@@ -70,7 +70,7 @@ public final class EqualsUtil {
 
     /**
      * Possibly-null object field.
-     * 
+     *
      * <p>Includes type-safe enumerations and collections, but does not include arrays. See class comment.
      *
      * @param o1

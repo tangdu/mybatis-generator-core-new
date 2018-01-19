@@ -23,9 +23,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 /**
- *
  * @author Jeff Butler
- *
  */
 public class DeleteByPrimaryKeyMethodGenerator extends AbstractJavaMapperMethodGenerator {
 
@@ -74,8 +72,7 @@ public class DeleteByPrimaryKeyMethodGenerator extends AbstractJavaMapperMethodG
             }
         }
 
-        addMethodComment(method, "根据ID删除" + getTableRemark() + "信息", method.getParameters().get(0).getName(),
-                getTableRemark() + "ID", "影响行");
+        addMethodComment(method, "根据ID删除" + getTableRemark() + "信息", method.getParameters().get(0).getName(), getTableRemark() + "ID", "影响行");
         context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
 
         addMapperAnnotations(method);

@@ -51,7 +51,6 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  * language used in Java.
  *
  * @author liuzh
- *
  */
 public class DomainObjectRenamingRule {
     private String searchString;

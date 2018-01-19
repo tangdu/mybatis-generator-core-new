@@ -1,38 +1,34 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.codegen.mybatis3.javamapper.elements.sqlprovider;
 
-import static org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities.getSelectListPhrase;
-import static org.mybatis.generator.internal.util.StringUtility.escapeStringForJava;
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.dom.java.*;
 
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.mybatis.generator.api.IntrospectedColumn;
-import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
-import org.mybatis.generator.api.dom.java.JavaVisibility;
-import org.mybatis.generator.api.dom.java.Method;
-import org.mybatis.generator.api.dom.java.Parameter;
-import org.mybatis.generator.api.dom.java.TopLevelClass;
+import static org.mybatis.generator.codegen.mybatis3.MyBatis3FormattingUtilities.getSelectListPhrase;
+import static org.mybatis.generator.internal.util.StringUtility.escapeStringForJava;
 
 /**
- * 
+ *
  * @author Jeff Butler
- * 
+ *
  */
 public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends AbstractJavaProviderMethodGenerator {
 
@@ -63,10 +59,9 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends Abstract
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());
         method.addParameter(new Parameter(fqjt, "example")); //$NON-NLS-1$
-        
-        context.getCommentGenerator().addGeneralMethodComment(method,
-                introspectedTable);
-        
+
+        context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
+
         if (useLegacyBuilder) {
             method.addBodyLine("BEGIN();"); //$NON-NLS-1$
         } else {
@@ -78,25 +73,21 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends Abstract
             if (distinctCheck) {
                 method.addBodyLine("if (example != null && example.isDistinct()) {"); //$NON-NLS-1$
                 method.addBodyLine(String.format("%sSELECT_DISTINCT(\"%s\");", //$NON-NLS-1$
-                        builderPrefix,
-                        escapeStringForJava(getSelectListPhrase(introspectedColumn))));
+                        builderPrefix, escapeStringForJava(getSelectListPhrase(introspectedColumn))));
                 method.addBodyLine("} else {"); //$NON-NLS-1$
                 method.addBodyLine(String.format("%sSELECT(\"%s\");", //$NON-NLS-1$
-                        builderPrefix,
-                        escapeStringForJava(getSelectListPhrase(introspectedColumn))));
+                        builderPrefix, escapeStringForJava(getSelectListPhrase(introspectedColumn))));
                 method.addBodyLine("}"); //$NON-NLS-1$
             } else {
                 method.addBodyLine(String.format("%sSELECT(\"%s\");", //$NON-NLS-1$
-                        builderPrefix,
-                        escapeStringForJava(getSelectListPhrase(introspectedColumn))));
+                        builderPrefix, escapeStringForJava(getSelectListPhrase(introspectedColumn))));
             }
 
             distinctCheck = false;
         }
 
         method.addBodyLine(String.format("%sFROM(\"%s\");", //$NON-NLS-1$
-                builderPrefix,
-                escapeStringForJava(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime())));
+                builderPrefix, escapeStringForJava(introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime())));
         if (useLegacyBuilder) {
             method.addBodyLine("applyWhere(example, false);"); //$NON-NLS-1$
         } else {
@@ -131,7 +122,6 @@ public class ProviderSelectByExampleWithoutBLOBsMethodGenerator extends Abstract
     }
 
     public boolean callPlugins(Method method, TopLevelClass topLevelClass) {
-        return context.getPlugins().providerSelectByExampleWithoutBLOBsMethodGenerated(method, topLevelClass,
-                introspectedTable);
+        return context.getPlugins().providerSelectByExampleWithoutBLOBsMethodGenerated(method, topLevelClass, introspectedTable);
     }
 }

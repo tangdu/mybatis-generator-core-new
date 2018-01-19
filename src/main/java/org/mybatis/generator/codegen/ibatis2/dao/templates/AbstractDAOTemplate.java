@@ -1,23 +1,19 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.codegen.ibatis2.dao.templates;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.mybatis.generator.api.CommentGenerator;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -26,11 +22,15 @@ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Base class for DAO templates. Subclasses should override any of the
  * configureXXX methods to specify the unique properties of the desired DAO
  * objects.
- * 
+ *
  * @author Jeff Butler
  */
 public abstract class AbstractDAOTemplate {
@@ -71,8 +71,7 @@ public abstract class AbstractDAOTemplate {
         configured = false;
     }
 
-    public final Method getConstructorClone(CommentGenerator commentGenerator,
-            FullyQualifiedJavaType type, IntrospectedTable introspectedTable) {
+    public final Method getConstructorClone(CommentGenerator commentGenerator, FullyQualifiedJavaType type, IntrospectedTable introspectedTable) {
         configure();
         Method answer = new Method();
         answer.setConstructor(true);
@@ -95,11 +94,9 @@ public abstract class AbstractDAOTemplate {
         return answer;
     }
 
-    public final String getDeleteMethod(String sqlMapNamespace,
-            String statementId, String parameter) {
+    public final String getDeleteMethod(String sqlMapNamespace, String statementId, String parameter) {
         configure();
-        String answer = MessageFormat.format(deleteMethodTemplate,
-                new Object[] { sqlMapNamespace, statementId, parameter });
+        String answer = MessageFormat.format(deleteMethodTemplate, new Object[]{sqlMapNamespace, statementId, parameter});
 
         return answer;
     }
@@ -114,29 +111,23 @@ public abstract class AbstractDAOTemplate {
         return implementationImports;
     }
 
-    public final String getInsertMethod(String sqlMapNamespace,
-            String statementId, String parameter) {
+    public final String getInsertMethod(String sqlMapNamespace, String statementId, String parameter) {
         configure();
-        String answer = MessageFormat.format(insertMethodTemplate,
-                new Object[] { sqlMapNamespace, statementId, parameter });
+        String answer = MessageFormat.format(insertMethodTemplate, new Object[]{sqlMapNamespace, statementId, parameter});
 
         return answer;
     }
 
-    public final String getQueryForListMethod(String sqlMapNamespace,
-            String statementId, String parameter) {
+    public final String getQueryForListMethod(String sqlMapNamespace, String statementId, String parameter) {
         configure();
-        String answer = MessageFormat.format(queryForListMethodTemplate,
-                new Object[] { sqlMapNamespace, statementId, parameter });
+        String answer = MessageFormat.format(queryForListMethodTemplate, new Object[]{sqlMapNamespace, statementId, parameter});
 
         return answer;
     }
 
-    public final String getQueryForObjectMethod(String sqlMapNamespace,
-            String statementId, String parameter) {
+    public final String getQueryForObjectMethod(String sqlMapNamespace, String statementId, String parameter) {
         configure();
-        String answer = MessageFormat.format(queryForObjectMethodTemplate,
-                new Object[] { sqlMapNamespace, statementId, parameter });
+        String answer = MessageFormat.format(queryForObjectMethodTemplate, new Object[]{sqlMapNamespace, statementId, parameter});
 
         return answer;
     }
@@ -146,11 +137,13 @@ public abstract class AbstractDAOTemplate {
         return superClass;
     }
 
-    public final String getUpdateMethod(String sqlMapNamespace,
-            String statementId, String parameter) {
+    protected void setSuperClass(FullyQualifiedJavaType superClass) {
+        this.superClass = superClass;
+    }
+
+    public final String getUpdateMethod(String sqlMapNamespace, String statementId, String parameter) {
         configure();
-        String answer = MessageFormat.format(updateMethodTemplate,
-                new Object[] { sqlMapNamespace, statementId, parameter });
+        String answer = MessageFormat.format(updateMethodTemplate, new Object[]{sqlMapNamespace, statementId, parameter});
 
         return answer;
     }
@@ -160,8 +153,7 @@ public abstract class AbstractDAOTemplate {
         return checkedExceptions;
     }
 
-    public final List<Field> getFieldClones(CommentGenerator commentGenerator,
-            IntrospectedTable introspectedTable) {
+    public final List<Field> getFieldClones(CommentGenerator commentGenerator, IntrospectedTable introspectedTable) {
         configure();
         List<Field> answer = new ArrayList<Field>();
         for (Field oldField : fields) {
@@ -180,9 +172,7 @@ public abstract class AbstractDAOTemplate {
         return answer;
     }
 
-    public final List<Method> getMethodClones(
-            CommentGenerator commentGenerator,
-            IntrospectedTable introspectedTable) {
+    public final List<Method> getMethodClones(CommentGenerator commentGenerator, IntrospectedTable introspectedTable) {
         configure();
         List<Method> answer = new ArrayList<Method>();
         for (Method oldMethod : methods) {
@@ -235,18 +225,12 @@ public abstract class AbstractDAOTemplate {
         methods.add(method);
     }
 
-    protected void setQueryForListMethodTemplate(
-            String queryForListMethodTemplate) {
+    protected void setQueryForListMethodTemplate(String queryForListMethodTemplate) {
         this.queryForListMethodTemplate = queryForListMethodTemplate;
     }
 
-    protected void setQueryForObjectMethodTemplate(
-            String queryForObjectMethodTemplate) {
+    protected void setQueryForObjectMethodTemplate(String queryForObjectMethodTemplate) {
         this.queryForObjectMethodTemplate = queryForObjectMethodTemplate;
-    }
-
-    protected void setSuperClass(FullyQualifiedJavaType superClass) {
-        this.superClass = superClass;
     }
 
     protected void setUpdateMethodTemplate(String updateMethodTemplate) {
@@ -361,15 +345,15 @@ public abstract class AbstractDAOTemplate {
      * <li>{1} - The SqlMap statement id</li>
      * <li>{2} - The parameter object</li>
      * </ul>
-     * 
+     *
      * <p>For example, when calling methods in the SqlMapClient interface, the
      * template would be:
-     * 
+     *
      * <p>sqlMapClient.insert(\"{0}.{1}\", {2});
-     * 
+     *
      * <p>Overriding methods should call the
      * <code>setInsertMethodTemplate(String)</code> method to set the template.
-     * 
+     *
      */
     protected abstract void configureInsertMethodTemplate();
 
@@ -382,12 +366,12 @@ public abstract class AbstractDAOTemplate {
      * <li>{1} - The SqlMap statement id</li>
      * <li>{2} - The parameter object</li>
      * </ul>
-     * 
+     *
      * <p>For example, when calling methods in the SqlMapClient interface, the
      * template would be:
-     * 
+     *
      * <p>sqlMapClient.queryForList(\"{0}.{1}\", {2});
-     * 
+     *
      * <p>Overriding methods should call the
      * <code>setQueryForListMethodTemplate(String)</code> method to set the
      * template.
@@ -403,12 +387,12 @@ public abstract class AbstractDAOTemplate {
      * <li>{1} - The SqlMap statement id</li>
      * <li>{2} - The parameter object</li>
      * </ul>
-     * 
+     *
      * <p>For example, when calling methods in the SqlMapClient interface, the
      * template would be:
-     * 
+     *
      * <p>sqlMapClient.queryForObject(\"{0}.{1}\", {2});
-     * 
+     *
      * <p>Overriding methods should call the
      * <code>setQueryForObjectMethodTemplate(String)</code> method to set the
      * template.
@@ -424,12 +408,12 @@ public abstract class AbstractDAOTemplate {
      * <li>{1} - The SqlMap statement id</li>
      * <li>{2} - The parameter object</li>
      * </ul>
-     * 
+     *
      * <p>For example, when calling methods in the SqlMapClient interface, the
      * template would be:
-     * 
+     *
      * <p>sqlMapClient.update(\"{0}.{1}\", {2});
-     * 
+     *
      * <p>Overriding methods should call the
      * <code>setUpdateMethodTemplate(String)</code> method to set the template.
      */
@@ -444,12 +428,12 @@ public abstract class AbstractDAOTemplate {
      * <li>{1} - The SqlMap statement id</li>
      * <li>{2} - The parameter object</li>
      * </ul>
-     * 
+     *
      * <p>For example, when calling methods in the SqlMapClient interface, the
      * template would be:
-     * 
+     *
      * <p>sqlMapClient.delete(\"{0}.{1}\", {2});
-     * 
+     *
      * <p>Overriding methods should call the
      * <code>setDeleteMethodTemplate(String)</code> method to set the template.
      */
