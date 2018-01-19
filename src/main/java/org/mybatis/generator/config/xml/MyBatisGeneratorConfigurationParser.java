@@ -465,6 +465,7 @@ public class MyBatisGeneratorConfigurationParser {
         Properties attributes = parseAttributes(node);
         String searchString = attributes.getProperty("searchString"); //$NON-NLS-1$
         String replaceString = attributes.getProperty("replaceString"); //$NON-NLS-1$
+        String endString = attributes.getProperty("endString"); //$NON-NLS-1$
 
         DomainObjectRenamingRule dorr = new DomainObjectRenamingRule();
 
@@ -472,6 +473,9 @@ public class MyBatisGeneratorConfigurationParser {
 
         if (stringHasValue(replaceString)) {
             dorr.setReplaceString(replaceString);
+        }
+        if (stringHasValue(endString)) {
+            dorr.setEndString(endString);
         }
 
         tc.setDomainObjectRenamingRule(dorr);

@@ -84,6 +84,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         return true;
     }
 
+    String entityName="";
     /**
      *
      */
@@ -92,20 +93,22 @@ public class MybatisFacadePlugin extends PluginAdapter {
         List<GeneratedJavaFile> files = new ArrayList<GeneratedJavaFile>();
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(this.pojoUrl + ".", "");
-        facadeInterfaceType = new FullyQualifiedJavaType(facadePack + "." + tableName + "Facade");
+        entityName=introspectedTable.getDomainReplaceObjectName();
+
+        facadeInterfaceType = new FullyQualifiedJavaType(facadePack + "." + entityName + "Facade");
         daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
-        facadeType = new FullyQualifiedJavaType(facadeImplPack + "." + tableName + "FacadeImpl");
-        serviceType = new FullyQualifiedJavaType(servicePack + "." + tableName + "Service");
+        facadeType = new FullyQualifiedJavaType(facadeImplPack + "." + entityName + "FacadeImpl");
+        serviceType = new FullyQualifiedJavaType(servicePack + "." + entityName + "Service");
 
         pojoType = new FullyQualifiedJavaType(pojoUrl + "." + tableName);
-        uptROType = new FullyQualifiedJavaType(roPackage + "." + tableName + "DelRO");
-        roType = new FullyQualifiedJavaType(roPackage + "." + pojoType.getShortName() + "RO");
-        pageROType = new FullyQualifiedJavaType(roPackage + "." + tableName + "PageQueryRO");
-        pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "PageQueryDO");
-        statecodeType = new FullyQualifiedJavaType(stateCodePackage + "." + pojoType.getShortName() + "StateCode");
+        uptROType = new FullyQualifiedJavaType(roPackage + "." + entityName + "DelRO");
+        roType = new FullyQualifiedJavaType(roPackage + "." + entityName + "RO");
+        pageROType = new FullyQualifiedJavaType(roPackage + "." + entityName + "PageQueryRO");
+        pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + entityName + "PageQueryDO");
+        statecodeType = new FullyQualifiedJavaType(stateCodePackage + "." + entityName+ "StateCode");
 
         //导入操作类
-        TopLevelClass pageDOTypeClss = new TopLevelClass(pageDOType);
+        TopLevelClass pageDOTypeClss = new TopLevelClass(pageROType);
         TopLevelClass uptDOTypeClss = new TopLevelClass(uptROType);
         TopLevelClass roTypeClss = new TopLevelClass(roType);
         addPageRO(pageDOTypeClss, introspectedTable, tableName, files);
@@ -123,7 +126,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         addJavaFileComment(stateCodeInterface);
         addJavaFileComment(topLevelFacadeClass);
 
-        addClassComment(stateCodeInterface, statecodeType, introspectedTable, "状态码(从-200开始)");
+        addClassComment(stateCodeInterface, statecodeType, introspectedTable, "状态码,从200开始(此code全局不可重复)");
         addClassComment(facadeInterface, facadeInterfaceType, introspectedTable, "服务消费者");
         addClassComment(topLevelFacadeClass, facadeType, introspectedTable, "服务生产者");
 
@@ -173,7 +176,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         method = pageQuery(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "查询对象", remarks + "分页结果");
 
         method = add(introspectedTable, tableName, false);
         method.removeAllBodyLines();
@@ -280,7 +283,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.addMethod(method);
 
         method = pageQuery(introspectedTable, tableName, true);
-        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页");
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "查询对象", remarks + "分页");
         topLevelClass.addMethod(method);
 
         method = add(introspectedTable, tableName, true);
@@ -321,7 +324,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
     }
 
     private String wrapperName(String name) {
-        return toLowerCase(String.format(name, pojoType.getShortName()));
+        return toLowerCase(String.format(name, entityName));
     }
 
     /**
@@ -344,7 +347,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         sb.append("\n");
         sb.append("\t\tif (" + toLowerCase(pojoType.getShortName()) + " != null) {");
         sb.append("\n");
-        sb.append("\t\t\treturn Results.success(ObjetUtils.copy(" + toLowerCase(pojoType.getShortName()) + "," + roType.getShortName() + ".class));");
+        sb.append("\t\t\treturn Results.success(ObjectUtils.copy(" + toLowerCase(pojoType.getShortName()) + "," + roType.getShortName() + ".class));");
         sb.append("\n");
         sb.append("\t\t}");
         sb.append("\n");
@@ -439,7 +442,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         sb.append("\n");
 
         sb.append("\t\treturn Results.success(this." + getDaoShort() + "");
-        String serviceMethodName = methodName.replaceAll(pojoType.getShortName(), "");
+        String serviceMethodName = methodName.replaceAll(introspectedTable.getDomainReplaceObjectName(), "");
         sb.append(serviceMethodName);
         sb.append("(");
 
@@ -483,9 +486,9 @@ public class MybatisFacadePlugin extends PluginAdapter {
      * import must class
      */
     private void addImport(Interface interfaces, TopLevelClass topLevelClass) {
-        interfaces.addImportedType(pojoType);
+        //interfaces.addImportedType(pojoType);
         interfaces.addImportedType(uptROType);
-        interfaces.addImportedType(pageDOType);
+        //interfaces.addImportedType(pageDOType);
         interfaces.addImportedType(pageROType);
         interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.result.Result"));
         interfaces.addImportedType(roType);
@@ -546,6 +549,8 @@ public class MybatisFacadePlugin extends PluginAdapter {
         // set implements interface
         topLevelClass.addImportedType("lombok.Data");
         topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType(serializableType);
+        topLevelClass.addSuperInterface(serializableType);
         addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "模型RO");
         addJavaFileComment(topLevelClass);
         List<IntrospectedColumn> introspectedColumns = introspectedTable.getAllColumns();

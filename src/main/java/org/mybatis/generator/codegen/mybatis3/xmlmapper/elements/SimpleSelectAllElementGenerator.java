@@ -43,8 +43,8 @@ public class SimpleSelectAllElementGenerator extends
 
         String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
         String table = introspectedTable.getBaseRecordType();
-        String tableName = table.replaceAll(pojoUrl + ".", "");
-        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+        String replaceObjectName = this.introspectedTable.getDomainReplaceObjectName();
+        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+replaceObjectName + "PageQueryDO");
 
 
         answer.addAttribute(new Attribute(

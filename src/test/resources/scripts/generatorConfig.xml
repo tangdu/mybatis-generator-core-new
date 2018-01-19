@@ -74,7 +74,7 @@
                           targetProject="/Users/tangdu/git/mybatis-generator-core/src/test/java"
     ></javaServiceGenerator>
 
-    <javaFacadeGenerator targetPackage="com.xn.user.facade"
+    <javaFacadeGenerator targetPackage="com.xn.user.facade.service"
                           implementationPackage="com.xn.user.facade.impl"
                           targetProject="/Users/tangdu/git/mybatis-generator-core/src/test/java"
                           stateCodePackage="com.xn.user.facade.statecode"
@@ -85,7 +85,7 @@
 
     <table tableName="t_user">
       <generatedKey column="id" sqlStatement="Mysql" identity="true" />
-      <domainObjectRenamingRule searchString="^T" replaceString="" />
+      <domainObjectRenamingRule searchString="^T" replaceString="" endString="DO" />
 
     </table>
   </context>

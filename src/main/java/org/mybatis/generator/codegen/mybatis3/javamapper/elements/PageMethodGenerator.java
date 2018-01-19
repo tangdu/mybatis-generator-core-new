@@ -43,8 +43,9 @@ public class PageMethodGenerator extends AbstractJavaMapperMethodGenerator {
 
         String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
         String table = introspectedTable.getBaseRecordType();
-        String tableName = table.replaceAll(pojoUrl + ".", "");
-        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+        //String tableName = table.replaceAll(pojoUrl + ".", "");
+        String replaceObjectName = introspectedTable.getDomainReplaceObjectName();
+        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+replaceObjectName + "PageQueryDO");
 
 
         FullyQualifiedJavaType returnType = FullyQualifiedJavaType

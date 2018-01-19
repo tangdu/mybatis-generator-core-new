@@ -15,18 +15,18 @@
  */
 package org.mybatis.generator.api;
 
+import org.mybatis.generator.config.Context;
+import org.mybatis.generator.config.DomainObjectRenamingRule;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static org.mybatis.generator.internal.util.EqualsUtil.areEqual;
 import static org.mybatis.generator.internal.util.HashCodeUtil.SEED;
 import static org.mybatis.generator.internal.util.HashCodeUtil.hash;
 import static org.mybatis.generator.internal.util.JavaBeansUtil.getCamelCaseString;
 import static org.mybatis.generator.internal.util.StringUtility.composeFullyQualifiedTableName;
 import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.DomainObjectRenamingRule;
 
 /**
  * The Class FullyQualifiedTable.
@@ -240,6 +240,13 @@ public class FullyQualifiedTable {
                         localTable, '_');
     }
 
+    public String getDomainReplaceObjectName() {
+        String name=getDomainObjectName();
+        if (domainObjectRenamingRule == null|| domainObjectRenamingRule.getEndString()==null||"".equals( domainObjectRenamingRule.getEndString())) {
+            return name;
+        }
+        return name.replaceAll(domainObjectRenamingRule.getEndString(),"");
+    }
     /**
      * Gets the domain object name.
      *
@@ -263,8 +270,16 @@ public class FullyQualifiedTable {
             replaceString = replaceString == null ? "" : replaceString; //$NON-NLS-1$
             Matcher matcher = pattern.matcher(finalDomainObjectName);
             finalDomainObjectName = matcher.replaceAll(replaceString);
+            String string = domainObjectRenamingRule.getEndString();
+            if(string!=null && !"".equals(string)){
+                finalDomainObjectName=finalDomainObjectName+string;
+            }
         }
         return finalDomainObjectName;
+    }
+
+    public DomainObjectRenamingRule getDomainObjectRenamingRule() {
+        return domainObjectRenamingRule;
     }
 
     /* (non-Javadoc)

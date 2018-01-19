@@ -250,7 +250,8 @@
 <!ELEMENT domainObjectRenamingRule EMPTY>
 <!ATTLIST domainObjectRenamingRule
   searchString CDATA #REQUIRED
-  replaceString CDATA #IMPLIED>
+  replaceString CDATA #IMPLIED
+  endString CDATA #IMPLIED>
 
 <!--
   The columnRenamingRule element is used to specify a rule for renaming

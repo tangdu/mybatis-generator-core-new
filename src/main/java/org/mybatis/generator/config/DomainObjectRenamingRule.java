@@ -1,61 +1,70 @@
 /**
- *    Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *       http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.mybatis.generator.config;
 
-import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
-import static org.mybatis.generator.internal.util.messages.Messages.getString;
+import org.mybatis.generator.api.dom.xml.Attribute;
+import org.mybatis.generator.api.dom.xml.XmlElement;
 
 import java.util.List;
 
-import org.mybatis.generator.api.dom.xml.Attribute;
-import org.mybatis.generator.api.dom.xml.XmlElement;
+import static org.mybatis.generator.internal.util.StringUtility.stringHasValue;
+import static org.mybatis.generator.internal.util.messages.Messages.getString;
 
 /**
  * This class is used to specify a renaming rule for table's domain object name.
  * If domainObjectName is not configured, we'll build the domain object named
  * based on the tableName or runtimeTableName. And then we use the domain object
  * renaming rule to generate the final domain object name.
- * 
+ *
  * <p>For example, if some tables are named:
- * 
+ *
  * <ul>
  * <li>SYS_USER</li>
  * <li>SYS_ROLE</li>
  * <li>SYS_FUNCTIONS</li>
  * </ul>
- * 
+ *
  * <p>it might be annoying to have the generated domain name all containing the SYS
  * prefix. This class can be used to remove the prefix by specifying
- * 
+ *
  * <ul>
  * <li>searchString="^Sys"</li>
  * <li>replaceString=""</li>
  * </ul>
- * 
+ *
  * <p>Note that internally, the generator uses the
  * <code>java.util.regex.Matcher.replaceAll</code> method for this function. See
  * the documentation of that method for example of the regular expression
  * language used in Java.
- * 
+ *
  * @author liuzh
- * 
+ *
  */
 public class DomainObjectRenamingRule {
     private String searchString;
     private String replaceString;
+    private String endString;
+
+    public String getEndString() {
+        return endString;
+    }
+
+    public void setEndString(String endString) {
+        this.endString = endString;
+    }
 
     public String getReplaceString() {
         return replaceString;
@@ -84,8 +93,10 @@ public class DomainObjectRenamingRule {
         xmlElement.addAttribute(new Attribute("searchString", searchString)); //$NON-NLS-1$
 
         if (replaceString != null) {
-            xmlElement.addAttribute(new Attribute(
-                    "replaceString", replaceString)); //$NON-NLS-1$
+            xmlElement.addAttribute(new Attribute("replaceString", replaceString)); //$NON-NLS-1$
+        }
+        if (endString != null) {
+            xmlElement.addAttribute(new Attribute("endString", endString)); //$NON-NLS-1$
         }
 
         return xmlElement;

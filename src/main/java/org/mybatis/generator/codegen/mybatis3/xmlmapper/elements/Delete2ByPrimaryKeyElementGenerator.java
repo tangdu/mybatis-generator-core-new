@@ -42,8 +42,7 @@ public class Delete2ByPrimaryKeyElementGenerator extends
         XmlElement answer = new XmlElement("update"); //$NON-NLS-1$
         String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
         String table = introspectedTable.getBaseRecordType();
-        String tableName = table.replaceAll(pojoUrl + ".", "");
-        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
+        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+table );
 
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getDelete2ByPrimaryKeyStatementId())); //$NON-NLS-1$

@@ -815,6 +815,16 @@ public abstract class IntrospectedTable {
         return sb.toString();
     }
 
+    public String getDomainReplaceObjectName() {
+        String name=fullyQualifiedTable.getDomainObjectName();
+        if (fullyQualifiedTable.getDomainObjectRenamingRule() == null||
+                fullyQualifiedTable.getDomainObjectRenamingRule().getEndString()==null||
+                "".equals( fullyQualifiedTable.getDomainObjectRenamingRule().getEndString())) {
+            return name;
+        }
+        return name.replaceAll(fullyQualifiedTable.getDomainObjectRenamingRule().getEndString(),"");
+    }
+
     protected void calculateJavaClientAttributes() {
         if (context.getJavaClientGeneratorConfiguration() == null) {
             return;
@@ -844,7 +854,15 @@ public abstract class IntrospectedTable {
                 sb.append(fullyQualifiedTable.getDomainObjectSubPackage());
                 sb.append('.');
             }
-            sb.append(fullyQualifiedTable.getDomainObjectName());
+            String mapperName=fullyQualifiedTable.getDomainObjectName();
+            DomainObjectRenamingRule domainObjectRenamingRule = fullyQualifiedTable.getDomainObjectRenamingRule();
+            if(domainObjectRenamingRule!=null){
+                String string = domainObjectRenamingRule.getEndString();
+                if(string!=null && !"".equals(string)){
+                    mapperName=mapperName.replaceAll(string,"");
+                }
+            }
+            sb.append(mapperName);
             sb.append("Mapper"); //$NON-NLS-1$
         }
         setMyBatis3JavaMapperType(sb.toString());
@@ -949,7 +967,7 @@ public abstract class IntrospectedTable {
             }
             sb.append(".xml"); //$NON-NLS-1$
         } else {
-            sb.append(fullyQualifiedTable.getDomainObjectName());
+            sb.append(fullyQualifiedTable.getDomainReplaceObjectName());//TANGDU
             sb.append("Mapper.xml"); //$NON-NLS-1$
         }
         return sb.toString();
@@ -966,7 +984,7 @@ public abstract class IntrospectedTable {
         if (stringHasValue(tableConfiguration.getMapperName())) {
             sb.append(tableConfiguration.getMapperName());
         } else {
-            sb.append(fullyQualifiedTable.getDomainObjectName());
+            sb.append(fullyQualifiedTable.getDomainReplaceObjectName());//TANGDU
             sb.append("Mapper"); //$NON-NLS-1$
         }
         return sb.toString();

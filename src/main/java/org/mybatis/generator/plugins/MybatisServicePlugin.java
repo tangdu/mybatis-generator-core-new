@@ -75,12 +75,13 @@ public class MybatisServicePlugin extends PluginAdapter {
         List<GeneratedJavaFile> files = new ArrayList<GeneratedJavaFile>();
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(this.pojoUrl + ".", "");
-        interfaceType = new FullyQualifiedJavaType(servicePack + "." + tableName + "Service");
+        String entityName=introspectedTable.getDomainReplaceObjectName();
+        interfaceType = new FullyQualifiedJavaType(servicePack + "." + entityName + "Service");
         daoType = new FullyQualifiedJavaType(introspectedTable.getMyBatis3JavaMapperType());
-        serviceType = new FullyQualifiedJavaType(serviceImplPack + "." + tableName + "ServiceImpl");
+        serviceType = new FullyQualifiedJavaType(serviceImplPack + "." + entityName + "ServiceImpl");
         pojoType = new FullyQualifiedJavaType(pojoUrl + "." + tableName);
         listType = new FullyQualifiedJavaType("java.util.List");
-        pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + tableName + "PageQueryDO");
+        pageDOType = new FullyQualifiedJavaType(pojoUrl + "." + entityName + "PageQueryDO");
 
         Interface serviceInterface = new Interface(interfaceType);
         TopLevelClass serviceClass = new TopLevelClass(serviceType);
@@ -138,7 +139,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         method = pageQuery(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
-        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
+        addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "查询对象", remarks + "分页结果");
 
         method = add(introspectedTable, tableName, false);
         method.removeAllBodyLines();

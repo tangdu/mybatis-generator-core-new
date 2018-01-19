@@ -76,12 +76,9 @@ public class SimpleJavaClientGenerator extends AbstractJavaClientGenerator {
 
         String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
         String table = introspectedTable.getBaseRecordType();
-        String tableName = table.replaceAll(pojoUrl + ".", "");
-        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
-        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
-        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
-        interfaze.addImportedType(uptDOType);
-        interfaze.addImportedType(uptBatDOType);
+        //String tableName = table.replaceAll(pojoUrl + ".", "");
+        String replaceObjectName = introspectedTable.getDomainReplaceObjectName();
+        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+replaceObjectName + "PageQueryDO");
         interfaze.addImportedType(pageDOType);
 
         addDeleteByPrimaryKeyMethod(interfaze);
