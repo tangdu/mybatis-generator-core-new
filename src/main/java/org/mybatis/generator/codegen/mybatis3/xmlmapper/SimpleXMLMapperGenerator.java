@@ -50,9 +50,8 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
         addResultMapElement(answer);
         addBaseColumnListElement(answer);
         addDeleteByPrimaryKeyElement(answer);
-
         addDelete2ByPrimaryKeyElement(answer);
-        addBatDeleteByPrimaryKeyElement(answer);
+        //addBatDeleteByPrimaryKeyElement(answer);
 
         addInsertElement(answer);
         addSelectByPrimaryKeyElement(answer);

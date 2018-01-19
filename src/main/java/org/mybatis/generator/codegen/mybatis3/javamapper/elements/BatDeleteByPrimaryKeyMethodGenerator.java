@@ -46,9 +46,7 @@ public class BatDeleteByPrimaryKeyMethodGenerator extends
         String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(pojoUrl + ".", "");
-        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
-        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
-        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+        FullyQualifiedJavaType pojoType = new FullyQualifiedJavaType(pojoUrl+"."+tableName);
 
 
         /*if (!isSimple && introspectedTable.getRules().generatePrimaryKeyClass()) {
@@ -86,8 +84,7 @@ public class BatDeleteByPrimaryKeyMethodGenerator extends
             }
         }*/
 
-
-        method.addParameter(new Parameter(uptBatDOType,toLowerCase(uptBatDOType.getShortName())));
+        method.addParameter(new Parameter(pojoType,toLowerCase(pojoType.getShortName())));
         addMethodComment(method, "根据ID批量删除" + getTableRemark() + "信息", method.getParameters().get(0).getName(),
                 getTableRemark() + "删除对象", "影响行");
         context.getCommentGenerator().addGeneralMethodComment(method,

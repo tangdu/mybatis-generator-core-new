@@ -41,15 +41,13 @@ public class BatDeleteByPrimaryKeyElementGenerator extends
         String pojoUrl=context.getJavaModelGeneratorConfiguration().getTargetPackage();
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(pojoUrl + ".", "");
-        FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
-        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
-        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
+        FullyQualifiedJavaType pojoType = new FullyQualifiedJavaType(pojoUrl+"."+tableName);
 
 
         answer.addAttribute(new Attribute(
                 "id", introspectedTable.getBatDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
-                uptBatDOType.getFullyQualifiedName()));
+                pojoType.getFullyQualifiedName()));
 
         context.getCommentGenerator().addComment(answer);
 

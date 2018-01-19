@@ -69,7 +69,8 @@
         targetPackage CDATA #REQUIRED
         targetProject CDATA #REQUIRED
         implementationPackage CDATA #REQUIRED
-        stateCodePackage CDATA #REQUIRED>
+        stateCodePackage CDATA #REQUIRED
+        roPackage CDATA #REQUIRED>
 
 <!--
   The connectionFactory element is used to describe the connection factory used

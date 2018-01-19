@@ -77,7 +77,8 @@
     <javaFacadeGenerator targetPackage="com.xn.user.facade"
                           implementationPackage="com.xn.user.facade.impl"
                           targetProject="/Users/tangdu/git/mybatis-generator-core/src/test/java"
-                         stateCodePackage="MAVEN"
+                          stateCodePackage="com.xn.user.facade.statecode"
+                          roPackage="com.xn.user.facade.ro"
     ></javaFacadeGenerator>
 
     <!-- sql占位符，表示所有的表 -->

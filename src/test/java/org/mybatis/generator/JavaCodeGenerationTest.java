@@ -28,13 +28,13 @@ import java.util.List;
 
 public class JavaCodeGenerationTest {
 
-    private static boolean writerflag=false;
+    private static boolean writerflag=true;
     @Test
     public void testJavaParse() {
         try {
             List<GeneratedJavaFile> generatedJavaFiles = generateJavaFiles();
             for (GeneratedJavaFile generatedJavaFile : generatedJavaFiles) {
-                //System.out.println(generatedJavaFile);
+                System.out.println(generatedJavaFile);
             }
 
             List<GeneratedXmlFile> generatedJavaFiles2 = generateXMLFiles();

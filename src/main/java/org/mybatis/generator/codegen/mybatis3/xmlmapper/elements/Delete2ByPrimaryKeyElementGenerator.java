@@ -44,11 +44,9 @@ public class Delete2ByPrimaryKeyElementGenerator extends
         String table = introspectedTable.getBaseRecordType();
         String tableName = table.replaceAll(pojoUrl + ".", "");
         FullyQualifiedJavaType uptDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "DelDO");
-        FullyQualifiedJavaType uptBatDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "BatDelDO");
-        FullyQualifiedJavaType pageDOType = new FullyQualifiedJavaType(pojoUrl+"."+tableName + "PageQueryDO");
 
         answer.addAttribute(new Attribute(
-                "id", introspectedTable.getBatDeleteByPrimaryKeyStatementId())); //$NON-NLS-1$
+                "id", introspectedTable.getDelete2ByPrimaryKeyStatementId())); //$NON-NLS-1$
         answer.addAttribute(new Attribute("parameterType", //$NON-NLS-1$
                 uptDOType.getFullyQualifiedName()));
 

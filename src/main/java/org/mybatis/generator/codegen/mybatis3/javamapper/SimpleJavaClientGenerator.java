@@ -86,7 +86,7 @@ public class SimpleJavaClientGenerator extends AbstractJavaClientGenerator {
 
         addDeleteByPrimaryKeyMethod(interfaze);
         addDelete2ByPrimaryKeyMethod(interfaze);
-        addBatDeleteByPrimaryKeyMethod(interfaze);
+        //addBatDeleteByPrimaryKeyMethod(interfaze);
 
         addInsertMethod(interfaze);
         addSelectByPrimaryKeyMethod(interfaze);
