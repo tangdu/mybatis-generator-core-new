@@ -69,9 +69,11 @@ public class JSONToStringPlugin extends PluginAdapter {
 
     private void generateToString(IntrospectedTable introspectedTable, TopLevelClass topLevelClass) {
         topLevelClass.getMethods().clear();
-        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Setter");
+        topLevelClass.addAnnotation("@Getter");
         topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.JSON"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Data"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Setter"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Getter"));
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());

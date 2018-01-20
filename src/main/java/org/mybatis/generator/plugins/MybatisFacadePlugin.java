@@ -511,10 +511,12 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         // set implements interface
         topLevelClass.addSuperInterface(serializableType);
-        topLevelClass.addImportedType("lombok.Data");
+        topLevelClass.addImportedType("lombok.Getter");
+        topLevelClass.addImportedType("lombok.Setter");
         topLevelClass.addImportedType("java.io.Serializable");
         topLevelClass.addImportedType("cn.luban.commons.validate.Validate");
-        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Getter");
+        topLevelClass.addAnnotation("@Setter");
         Field field = new Field();
         field.setVisibility(JavaVisibility.PRIVATE);
         field.setName("id");
@@ -540,8 +542,10 @@ public class MybatisFacadePlugin extends PluginAdapter {
     protected void addPojoRO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         // set implements interface
-        topLevelClass.addImportedType("lombok.Data");
-        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType("lombok.Setter");
+        topLevelClass.addImportedType("lombok.Getter");
+        topLevelClass.addAnnotation("@Setter");
+        topLevelClass.addAnnotation("@Getter");
         topLevelClass.addImportedType(serializableType);
         topLevelClass.addSuperInterface(serializableType);
         addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "模型RO");
@@ -570,8 +574,10 @@ public class MybatisFacadePlugin extends PluginAdapter {
         // set implements interface
         topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.ro.PageQuery"));
         topLevelClass.addImportedType("cn.luban.commons.ro.PageQuery");
-        topLevelClass.addImportedType("lombok.Data");
-        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType("lombok.Getter");
+        topLevelClass.addImportedType("lombok.Setter");
+        topLevelClass.addAnnotation("@Getter");
+        topLevelClass.addAnnotation("@Setter");
         addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "分页RO");
         addJavaFileComment(topLevelClass);
         List<IntrospectedColumn> introspectedColumns = introspectedTable.getAllColumns();

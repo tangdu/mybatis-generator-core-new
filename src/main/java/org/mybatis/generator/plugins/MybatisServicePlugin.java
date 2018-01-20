@@ -170,8 +170,10 @@ public class MybatisServicePlugin extends PluginAdapter {
         // set implements interface
         topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.ro.PageQuery"));
         topLevelClass.addImportedType("cn.luban.commons.ro.PageQuery");
-        topLevelClass.addImportedType("lombok.Data");
-        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType("lombok.Setter");
+        topLevelClass.addImportedType("lombok.Getter");
+        topLevelClass.addAnnotation("@Setter");
+        topLevelClass.addAnnotation("@Getter");
         addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "分页DO");
         addJavaFileComment(topLevelClass);
         List<IntrospectedColumn> introspectedColumns = introspectedTable.getAllColumns();
