@@ -75,6 +75,7 @@ public class JavaMapperGenerator extends AbstractJavaClientGenerator {
         addDelete2ByPrimaryKeyMethod(interfaze);
         addInsertMethod(interfaze);
         addInsertSelectiveMethod(interfaze);
+        addSelectAllMethod(interfaze);
         addSelectByExampleWithBLOBsMethod(interfaze);
         addSelectByExampleWithoutBLOBsMethod(interfaze);
         addSelectByPrimaryKeyMethod(interfaze);
@@ -145,6 +146,11 @@ public class JavaMapperGenerator extends AbstractJavaClientGenerator {
             AbstractJavaMapperMethodGenerator methodGenerator = new InsertSelectiveMethodGenerator();
             initializeAndExecuteGenerator(methodGenerator, interfaze);
         }
+    }
+
+    protected void addSelectAllMethod(Interface interfaze) {
+        AbstractJavaMapperMethodGenerator methodGenerator = new SelectAllMethodGenerator();
+        initializeAndExecuteGenerator(methodGenerator, interfaze);
     }
 
     protected void addSelectByExampleWithBLOBsMethod(Interface interfaze) {

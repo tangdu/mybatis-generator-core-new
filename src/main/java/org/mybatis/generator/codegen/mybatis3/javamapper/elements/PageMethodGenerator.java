@@ -55,7 +55,7 @@ public class PageMethodGenerator extends AbstractJavaMapperMethodGenerator {
         importedTypes.add(listType);
         returnType.addTypeArgument(listType);
         method.setReturnType(returnType);
-        method.setName(introspectedTable.getSelectAllStatementId());
+        method.setName(introspectedTable.getPageSelectAllStatementId());
         method.addParameter(new Parameter(pageDOType, toLowerCase(pageDOType.getShortName())));
 
         addMethodComment(method, "分页查询" + getTableRemark() + "信息", method.getParameters().get(0).getName(), getTableRemark() + "查询对象", getTableRemark() + "分页结果");

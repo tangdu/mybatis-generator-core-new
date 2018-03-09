@@ -74,19 +74,19 @@ public class XmlCodeGenerationTest {
     }
 
     private static List<GeneratedXmlFile> generateXmlFilesMybatis() throws Exception {
-        JavaCodeGenerationTest.createDatabase();
+        TangduJavaCodeGenerationTest.createDatabase();
         return generateXmlFiles("/scripts/generatorConfig.xml");
     }
 
     private static List<GeneratedXmlFile> generateXmlFilesIbatis() throws Exception {
-        JavaCodeGenerationTest.createDatabase();
+        TangduJavaCodeGenerationTest.createDatabase();
         return generateXmlFiles("/scripts/ibatorConfig.xml");
     }
 
     private static List<GeneratedXmlFile> generateXmlFiles(String configFile) throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(JavaCodeGenerationTest.class.getResourceAsStream(configFile));
+        Configuration config = cp.parseConfiguration(TangduJavaCodeGenerationTest.class.getResourceAsStream(configFile));
 
         DefaultShellCallback shellCallback = new DefaultShellCallback(true);
 

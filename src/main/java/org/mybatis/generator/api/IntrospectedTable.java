@@ -491,7 +491,8 @@ public abstract class IntrospectedTable {
 
         setInsertStatementId("add"); //$NON-NLS-1$
         setInsertSelectiveStatementId("addSelective"); //$NON-NLS-1$
-        setSelectAllStatementId("queryPage"); //$NON-NLS-1$
+        setPageSelectAllStatementId("queryPage"); //$NON-NLS-1$
+        setSelectAll2StatementId("queryAll");
         setSelectByExampleStatementId("selectByExample"); //$NON-NLS-1$
         setSelectByExampleWithBLOBsStatementId("selectByExampleWithBLOBs"); //$NON-NLS-1$
         setSelectByPrimaryKeyStatementId("queryById"); //$NON-NLS-1$
@@ -637,13 +638,22 @@ public abstract class IntrospectedTable {
         internalAttributes.put(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_WITH_BLOBS_STATEMENT_ID, s);
     }
 
-    public String getSelectAllStatementId() {
+    public String getPageSelectAllStatementId() {
         return internalAttributes.get(InternalAttribute.ATTR_SELECT_ALL_STATEMENT_ID);
     }
 
-    public void setSelectAllStatementId(String s) {
+    public void setPageSelectAllStatementId(String s) {
         internalAttributes.put(InternalAttribute.ATTR_SELECT_ALL_STATEMENT_ID, s);
     }
+
+    public String getSelectAll2StatementId() {
+        return internalAttributes.get(InternalAttribute.ATTR_SELECT_ALL_STATEMENT_ID);
+    }
+
+    public void setSelectAll2StatementId(String s) {
+        internalAttributes.put(InternalAttribute.ATTR_SELECT_ALL_STATEMENT_ID, s);
+    }
+
 
     public String getSelectByExampleStatementId() {
         return internalAttributes.get(InternalAttribute.ATTR_SELECT_BY_EXAMPLE_STATEMENT_ID);

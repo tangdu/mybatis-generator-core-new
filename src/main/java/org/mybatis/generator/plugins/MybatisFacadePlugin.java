@@ -176,6 +176,11 @@ public class MybatisFacadePlugin extends PluginAdapter {
         interface1.addMethod(method);
         addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "查询对象", remarks + "分页结果");
 
+        method = queryAll(introspectedTable, tableName, false);
+        method.removeAllBodyLines();
+        interface1.addMethod(method);
+        addMethodComment(method, "查询所有" + remarks + "信息", "", "", remarks + "列表");
+
         method = add(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
@@ -281,6 +286,11 @@ public class MybatisFacadePlugin extends PluginAdapter {
         addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "查询对象", remarks + "分页");
         topLevelClass.addMethod(method);
 
+        method = queryAll(introspectedTable, tableName, false);
+        addMethodComment(method, "查询所有" + remarks + "信息", "", "", remarks + "列表");
+        topLevelClass.addMethod(method);
+
+
         method = add(introspectedTable, tableName, true);
         addMethodComment(method, "添加" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "信息");
         topLevelClass.addMethod(method);
@@ -347,6 +357,20 @@ public class MybatisFacadePlugin extends PluginAdapter {
         sb.append("\t\t}");
         sb.append("\n");
         sb.append("\t\treturn Results.failed(" + statecodeType.getShortName() + "." + (pojoType.getShortName()).toUpperCase() + "_NOT_FOUND);");
+        method.addBodyLine(sb.toString());
+        return method;
+    }
+
+    protected Method queryAll(IntrospectedTable introspectedTable, String tableName, boolean f) {
+        Method method = new Method();
+        method.setName("queryAll");
+        method.setReturnType(new FullyQualifiedJavaType("Result<List<" + pojoType.getShortName() + ">>"));
+        if (f) method.addAnnotation("@Override");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        StringBuilder sb = new StringBuilder();
+        sb.append("List<"+pojoType.getShortName()+"> list = this." + getDaoShort() + "queryAll();");
+        sb.append("\n");
+        sb.append("\t\treturn Results.success(ObjectUtils.copyList(list,"+roType.getShortName()+".class));");
         method.addBodyLine(sb.toString());
         return method;
     }
@@ -479,7 +503,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
      * import must class
      */
     private void addImport(Interface interfaces, TopLevelClass topLevelClass) {
-        //interfaces.addImportedType(pojoType);
+        interfaces.addImportedType(listType);
         interfaces.addImportedType(uptROType);
         //interfaces.addImportedType(pageDOType);
         interfaces.addImportedType(pageROType);
@@ -487,7 +511,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         interfaces.addImportedType(roType);
         interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.ro.PageData"));
 
-
+        topLevelClass.addImportedType(listType);
         topLevelClass.addImportedType(facadeInterfaceType);
         topLevelClass.addImportedType(pojoType);
         topLevelClass.addImportedType(resultType);

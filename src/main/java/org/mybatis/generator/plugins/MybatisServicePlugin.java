@@ -139,6 +139,11 @@ public class MybatisServicePlugin extends PluginAdapter {
         interface1.addMethod(method);
         addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "查询对象", remarks + "分页结果");
 
+        method = queryAll(introspectedTable, tableName, false);
+        method.removeAllBodyLines();
+        interface1.addMethod(method);
+        addMethodComment(method, "查询所有" + remarks + "信息", "", "", remarks + "列表");
+
         method = add(introspectedTable, tableName, false);
         method.removeAllBodyLines();
         interface1.addMethod(method);
@@ -223,6 +228,11 @@ public class MybatisServicePlugin extends PluginAdapter {
         addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
         topLevelClass.addMethod(method);
 
+        method = queryAll(introspectedTable, tableName, false);
+        addMethodComment(method, "查询所有" + remarks + "信息", "", "", remarks + "列表");
+        topLevelClass.addMethod(method);
+
+
         method = add(introspectedTable, tableName, true);
         addMethodComment(method, "添加" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "记录ID");
         topLevelClass.addMethod(method);
@@ -292,6 +302,19 @@ public class MybatisServicePlugin extends PluginAdapter {
         method.addBodyLine(sb.toString());
         return method;
     }
+
+    protected Method queryAll(IntrospectedTable introspectedTable, String tableName, boolean f) {
+        Method method = new Method();
+        method.setName("queryAll");
+        method.setReturnType(new FullyQualifiedJavaType("List<" + pojoType.getShortName() + ">"));
+        if (f) method.addAnnotation("@Override");
+        method.setVisibility(JavaVisibility.PUBLIC);
+        StringBuilder sb = new StringBuilder();
+        sb.append("return this." + getDaoShort() + "queryAll();");
+        method.addBodyLine(sb.toString());
+        return method;
+    }
+
 
     /** 分页 **/
     protected Method pageQuery(IntrospectedTable introspectedTable, String tableName, boolean f) {
@@ -432,8 +455,10 @@ public class MybatisServicePlugin extends PluginAdapter {
         topLevelClass.addImportedType(pojoType);
         interfaces.addImportedType(pageDOType);
         interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.ro.PageData"));
+        interfaces.addImportedType(listType);
 
         topLevelClass.addImportedType(slf4jLogger);
+        topLevelClass.addImportedType(listType);
         topLevelClass.addImportedType("com.github.pagehelper.Page");
         topLevelClass.addImportedType("com.github.pagehelper.PageHelper");
         topLevelClass.addImportedType("cn.luban.commons.ro.PageData");

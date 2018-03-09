@@ -50,8 +50,9 @@ public class SelectAllMethodGenerator extends AbstractJavaMapperMethodGenerator 
         importedTypes.add(listType);
         returnType.addTypeArgument(listType);
         method.setReturnType(returnType);
-        method.setName(introspectedTable.getSelectAllStatementId());
+        method.setName(introspectedTable.getSelectAll2StatementId());
 
+        addMethodComment(method, "查询所有" + getTableRemark() + "信息", "", getTableRemark() + "查询对象", getTableRemark() + "列表");
         context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
 
         addMapperAnnotations(interfaze, method);

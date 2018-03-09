@@ -26,20 +26,24 @@ import org.mybatis.generator.internal.DefaultShellCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JavaCodeGenerationTest {
+/**
+ * 测试生成代码
+ */
+public class TangduJavaCodeGenerationTest {
 
-    private static boolean writerflag=true;
+    //是否生成文件
+    private static boolean writerflag=false;
     @Test
     public void testJavaParse() {
         try {
             List<GeneratedJavaFile> generatedJavaFiles = generateJavaFiles();
             for (GeneratedJavaFile generatedJavaFile : generatedJavaFiles) {
-                System.out.println(generatedJavaFile);
+//                System.out.println(generatedJavaFile);
             }
 
             List<GeneratedXmlFile> generatedJavaFiles2 = generateXMLFiles();
             for (GeneratedXmlFile generatedJavaFile : generatedJavaFiles2) {
-                System.out.println(generatedJavaFile);
+//                System.out.println(generatedJavaFile);
             }
         } catch (Exception e) {
             e.printStackTrace();;
@@ -64,7 +68,7 @@ public class JavaCodeGenerationTest {
     private static List<GeneratedJavaFile> generateJavaFiles(String configFile) throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(JavaCodeGenerationTest.class.getResourceAsStream(configFile));
+        Configuration config = cp.parseConfiguration(TangduJavaCodeGenerationTest.class.getResourceAsStream(configFile));
 
         DefaultShellCallback shellCallback = new DefaultShellCallback(true);
 
@@ -76,7 +80,7 @@ public class JavaCodeGenerationTest {
     private static List<GeneratedXmlFile> generateXMLFiles(String configFile) throws Exception {
         List<String> warnings = new ArrayList<String>();
         ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config = cp.parseConfiguration(JavaCodeGenerationTest.class.getResourceAsStream(configFile));
+        Configuration config = cp.parseConfiguration(TangduJavaCodeGenerationTest.class.getResourceAsStream(configFile));
 
         DefaultShellCallback shellCallback = new DefaultShellCallback(true);
 
@@ -86,7 +90,7 @@ public class JavaCodeGenerationTest {
     }
 
     public static void createDatabase() throws Exception {
-        SqlScriptRunner scriptRunner = new SqlScriptRunner(JavaCodeGenerationTest.class.getResourceAsStream("/scripts/CreateDB.sql"), "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:aname", "sa", "");
+        SqlScriptRunner scriptRunner = new SqlScriptRunner(TangduJavaCodeGenerationTest.class.getResourceAsStream("/scripts/CreateDB.sql"), "org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:aname", "sa", "");
         scriptRunner.executeScript();
     }
 }

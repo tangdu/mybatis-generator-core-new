@@ -481,8 +481,10 @@ public abstract class PluginAdapter implements Plugin {
         sb.append("\n");
         sb.append("\t * ");
         sb.append("\n");
-        sb.append("\t * @param ").append(ags).append(" ").append(agsName);
-        sb.append("\n");
+        if(!"".equals(agsName)) {
+            sb.append("\t * @param ").append(ags).append(" ").append(agsName);
+            sb.append("\n");
+        }
         sb.append("\t * @return ").append(result);
         field.addJavaDocLine(sb.toString());
         field.addJavaDocLine(" */");

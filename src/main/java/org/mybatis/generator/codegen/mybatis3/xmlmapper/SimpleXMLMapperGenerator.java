@@ -56,6 +56,7 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
         addInsertElement(answer);
         addSelectByPrimaryKeyElement(answer);
         addQueryPageElement(answer);
+        addSelectAllElement(answer);
         addUpdateByPrimaryKeyElement(answer);
         addUpdateByPrimaryKeySelectiveElement(answer);
         answer.addElement(new TextElement(""));
@@ -88,7 +89,7 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
 
     protected void addQueryPageElement(XmlElement parentElement) {
         addLineElement(parentElement, "根据参数分页查询");
-        AbstractXmlElementGenerator elementGenerator = new SimpleSelectAllElementGenerator();
+        AbstractXmlElementGenerator elementGenerator = new SimplePageSelectAllElementGenerator();
         initializeAndExecuteGenerator(elementGenerator, parentElement);
 
     }
@@ -139,6 +140,12 @@ public class SimpleXMLMapperGenerator extends AbstractXmlGenerator {
             AbstractXmlElementGenerator elementGenerator = new UpdateByPrimaryKeySelectiveElementGenerator();
             initializeAndExecuteGenerator(elementGenerator, parentElement);
         }
+    }
+
+    protected void addSelectAllElement(XmlElement parentElement) {
+        addLineElement(parentElement, "查询所有");
+        AbstractXmlElementGenerator elementGenerator = new SimpleSelectAllElementGenerator();
+        initializeAndExecuteGenerator(elementGenerator, parentElement);
     }
 
     protected void addBaseColumnListElement(XmlElement parentElement) {

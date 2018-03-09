@@ -27,6 +27,7 @@
     <plugin type="org.mybatis.generator.plugins.JSONToStringPlugin" />
     <plugin type="org.mybatis.generator.plugins.MybatisServicePlugin" />
     <plugin type="org.mybatis.generator.plugins.MybatisFacadePlugin" />
+    <plugin type="org.mybatis.generator.plugins.BuddhaServicePlugin" />
 
     <commentGenerator type="org.mybatis.generator.internal.TangCommentGenerator">
       <property name="suppressDate" value="true"></property>
