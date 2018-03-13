@@ -58,6 +58,10 @@ public class UpdateByExampleSelectiveElementGenerator extends AbstractXmlElement
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty("record.")); //$NON-NLS-1$
             sb.append(" != null"); //$NON-NLS-1$
+            if(introspectedColumn.isStringColumn()) {
+                sb.append(introspectedColumn.getJavaProperty());
+                sb.append(" !=''");
+            }
             XmlElement isNotNullElement = new XmlElement("if"); //$NON-NLS-1$
             isNotNullElement.addAttribute(new Attribute("test", sb.toString())); //$NON-NLS-1$
             dynamicElement.addElement(isNotNullElement);

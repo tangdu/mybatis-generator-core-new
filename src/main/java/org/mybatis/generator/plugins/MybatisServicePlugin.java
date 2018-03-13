@@ -228,7 +228,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         addMethodComment(method, "分页查询" + remarks + "信息", method.getParameters().get(0).getName(), remarks + "信息", remarks + "分页结果");
         topLevelClass.addMethod(method);
 
-        method = queryAll(introspectedTable, tableName, false);
+        method = queryAll(introspectedTable, tableName, true);
         addMethodComment(method, "查询所有" + remarks + "信息", "", "", remarks + "列表");
         topLevelClass.addMethod(method);
 
@@ -306,8 +306,8 @@ public class MybatisServicePlugin extends PluginAdapter {
     protected Method queryAll(IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
         method.setName("queryAll");
-        method.setReturnType(new FullyQualifiedJavaType("List<" + pojoType.getShortName() + ">"));
         if (f) method.addAnnotation("@Override");
+        method.setReturnType(new FullyQualifiedJavaType("List<" + pojoType.getShortName() + ">"));
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
         sb.append("return this." + getDaoShort() + "queryAll();");
