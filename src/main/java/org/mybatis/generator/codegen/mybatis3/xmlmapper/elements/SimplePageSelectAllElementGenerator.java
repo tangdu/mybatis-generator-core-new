@@ -91,8 +91,8 @@ public class SimplePageSelectAllElementGenerator extends AbstractXmlElementGener
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(" != null"); //$NON-NLS-1$
-            sb.append(" and ");
             if(introspectedColumn.isStringColumn()) {
+                sb.append(" and ");
                 sb.append(introspectedColumn.getJavaProperty());
                 sb.append(" !=''");
             }
