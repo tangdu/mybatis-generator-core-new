@@ -557,6 +557,15 @@ public class MybatisFacadePlugin extends PluginAdapter {
         field.addJavaDocLine("/** 变更人 **/");
         topLevelClass.addField(field);
 
+        Method toString=new Method("toString");
+        toString.addBodyLine("return JSON.toJSONString(this, SerializerFeature.WriteDateUseDateFormat);");
+        toString.setReturnType(new FullyQualifiedJavaType("java.lang.String"));
+        toString.addAnnotation("@Override");
+        toString.setVisibility(JavaVisibility.PUBLIC);
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.JSON"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.serializer.SerializerFeature"));
+        topLevelClass.addMethod(toString);
+
         addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "更新RO");
         addJavaFileComment(topLevelClass);
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
@@ -587,6 +596,15 @@ public class MybatisFacadePlugin extends PluginAdapter {
                 topLevelClass.addImportedType(field.getType());
             }
         }
+
+        Method toString=new Method("toString");
+        toString.addBodyLine("return JSON.toJSONString(this, SerializerFeature.WriteDateUseDateFormat);");
+        toString.setReturnType(new FullyQualifiedJavaType("java.lang.String"));
+        toString.addAnnotation("@Override");
+        toString.setVisibility(JavaVisibility.PUBLIC);
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.JSON"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.serializer.SerializerFeature"));
+        topLevelClass.addMethod(toString);
 
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
         files.add(file);

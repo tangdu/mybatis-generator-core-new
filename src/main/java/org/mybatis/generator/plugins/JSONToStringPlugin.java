@@ -72,6 +72,7 @@ public class JSONToStringPlugin extends PluginAdapter {
         topLevelClass.addAnnotation("@Setter");
         topLevelClass.addAnnotation("@Getter");
         topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.JSON"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.serializer.SerializerFeature"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Setter"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Getter"));
         Method method = new Method();
@@ -88,7 +89,7 @@ public class JSONToStringPlugin extends PluginAdapter {
             context.getCommentGenerator().addGeneralMethodComment(method, introspectedTable);
         }
 
-        method.addBodyLine("return JSON.toJSONString(this);"); //$NON-NLS-1$
+        method.addBodyLine("return JSON.toJSONString(this, SerializerFeature.WriteDateUseDateFormat);"); //$NON-NLS-1$
 
         topLevelClass.addMethod(method);
     }
