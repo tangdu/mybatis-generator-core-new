@@ -110,7 +110,7 @@ public class MybatisServicePlugin extends PluginAdapter {
 
     public void addJavaFileComment(CompilationUnit compilationUnit) {
         compilationUnit.addFileCommentLine("/**");
-        compilationUnit.addFileCommentLine("* xnh.com Inc.");
+        compilationUnit.addFileCommentLine("* tangdu Inc.");
         compilationUnit.addFileCommentLine("* Copyright (c) 2017-2018 All Rights Reserved.");
         compilationUnit.addFileCommentLine("*/");
     }
