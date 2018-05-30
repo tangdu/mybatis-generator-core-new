@@ -61,6 +61,10 @@ public class MybatisFacadePlugin extends PluginAdapter {
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
+        if(introspectedTable.getContext().getJavaServiceGeneratorConfiguration()==null
+                || introspectedTable.getContext().getJavaFacadeGeneratorConfiguration()==null){
+            return;
+        }
         JavaFacadeGeneratorConfiguration javaFacadeGeneratorConfiguration = introspectedTable.getContext().getJavaFacadeGeneratorConfiguration();
         JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration = introspectedTable.getContext().getJavaServiceGeneratorConfiguration();
         this.servicePack = javaServiceGeneratorConfiguration.getTargetPackage();

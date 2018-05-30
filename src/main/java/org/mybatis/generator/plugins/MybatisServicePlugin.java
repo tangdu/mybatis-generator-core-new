@@ -48,6 +48,9 @@ public class MybatisServicePlugin extends PluginAdapter {
 
     @Override
     public void initialized(IntrospectedTable introspectedTable) {
+        if(introspectedTable.getContext().getJavaServiceGeneratorConfiguration()==null){
+            return;
+        }
         JavaServiceGeneratorConfiguration javaServiceGeneratorConfiguration = introspectedTable.getContext().getJavaServiceGeneratorConfiguration();
         this.servicePack = javaServiceGeneratorConfiguration.getTargetPackage();
         this.serviceImplPack = javaServiceGeneratorConfiguration.getImplementationPackage();

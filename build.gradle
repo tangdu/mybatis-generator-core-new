@@ -49,8 +49,8 @@ uploadArchives {
     configuration = configurations.archives
     repositories {
         mavenDeployer {
-            repository(url: 'http://repo.orzass.com/nexus/content/repositories/releases/') {
-                authentication(userName: "xnh", password: "xnh123")
+            repository(url: 'http://192.168.1.101:8081/repository/maven-releases/') {
+                authentication(userName: "admin", password: "admin123")
             }
             pom.project {
                 groupId project.group

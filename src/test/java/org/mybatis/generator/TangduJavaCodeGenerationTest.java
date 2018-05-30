@@ -38,12 +38,12 @@ public class TangduJavaCodeGenerationTest {
         try {
             List<GeneratedJavaFile> generatedJavaFiles = generateJavaFiles();
             for (GeneratedJavaFile generatedJavaFile : generatedJavaFiles) {
-                System.out.println(generatedJavaFile);
+//                System.out.println(generatedJavaFile);
             }
 
             List<GeneratedXmlFile> generatedJavaFiles2 = generateXMLFiles();
             for (GeneratedXmlFile generatedJavaFile : generatedJavaFiles2) {
-//                System.out.println(generatedJavaFile);
+                System.out.println(generatedJavaFile);
             }
         } catch (Exception e) {
             e.printStackTrace();;
