@@ -562,12 +562,12 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.addField(field);
 
         Method toString=new Method("toString");
-        toString.addBodyLine("return JSON.toJSONString(this, SerializerFeature.WriteDateUseDateFormat);");
+        toString.addBodyLine("return ToStringBuilder.reflectionToString (this, ToStringStyle.JSON_STYLE);");
         toString.setReturnType(new FullyQualifiedJavaType("java.lang.String"));
         toString.addAnnotation("@Override");
         toString.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.JSON"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.serializer.SerializerFeature"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.commons.lang3.builder.ToStringBuilder"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.commons.lang3.builder.ToStringStyle"));
         topLevelClass.addMethod(toString);
 
         addClassComment(topLevelClass, topLevelClass.getType(), introspectedTable, "更新RO");
@@ -602,12 +602,12 @@ public class MybatisFacadePlugin extends PluginAdapter {
         }
 
         Method toString=new Method("toString");
-        toString.addBodyLine("return JSON.toJSONString(this, SerializerFeature.WriteDateUseDateFormat);");
+        toString.addBodyLine("return ToStringBuilder.reflectionToString (this, ToStringStyle.JSON_STYLE);");
         toString.setReturnType(new FullyQualifiedJavaType("java.lang.String"));
         toString.addAnnotation("@Override");
         toString.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.JSON"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.alibaba.fastjson.serializer.SerializerFeature"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.commons.lang3.builder.ToStringBuilder"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.commons.lang3.builder.ToStringStyle"));
         topLevelClass.addMethod(toString);
 
         GeneratedJavaFile file = new GeneratedJavaFile(topLevelClass, project, context.getJavaFormatter());
