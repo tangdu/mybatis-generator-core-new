@@ -71,10 +71,10 @@ public class JSONToStringPlugin extends PluginAdapter {
         topLevelClass.getMethods().clear();
         topLevelClass.addAnnotation("@Setter");
         topLevelClass.addAnnotation("@Getter");
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("import org.apache.commons.lang3.builder.ToStringBuilder"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("import org.apache.commons.lang3.builder.ToStringStyle"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Setter"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("lombok.Getter"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.commons.lang3.builder.ToStringBuilder"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.commons.lang3.builder.ToStringStyle"));
         Method method = new Method();
         method.setVisibility(JavaVisibility.PUBLIC);
         method.setReturnType(FullyQualifiedJavaType.getStringInstance());

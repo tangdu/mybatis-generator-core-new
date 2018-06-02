@@ -65,6 +65,12 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends AbstractXmlElem
             if (introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")) {
                 continue;
             }
+            if (introspectedColumn.getActualColumnName().toLowerCase().equals("create_person")) {
+                continue;
+            }
+            if (introspectedColumn.getActualColumnName().toLowerCase().equals("create_time")) {
+                continue;
+            }
             sb.setLength(0);
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(" != null"); //$NON-NLS-1$
