@@ -97,7 +97,7 @@ public class SimpleSelectByPrimaryKeyElementGenerator extends AbstractXmlElement
             if (and) {
                 sb.append("  and "); //$NON-NLS-1$
             } else {
-                sb.append("where is_delete=0 and "); //$NON-NLS-1$
+                sb.append("where  "); //$NON-NLS-1$
                 and = true;
             }
 

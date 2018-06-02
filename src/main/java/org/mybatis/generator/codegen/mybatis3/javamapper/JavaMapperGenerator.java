@@ -72,7 +72,7 @@ public class JavaMapperGenerator extends AbstractJavaClientGenerator {
         addDeleteByExampleMethod(interfaze);
         addDeleteByPrimaryKeyMethod(interfaze);
         addBatDeleteByExampleMethod(interfaze);
-        addDelete2ByPrimaryKeyMethod(interfaze);
+//        addDelete2ByPrimaryKeyMethod(interfaze);
         addInsertMethod(interfaze);
         addInsertSelectiveMethod(interfaze);
         addSelectAllMethod(interfaze);

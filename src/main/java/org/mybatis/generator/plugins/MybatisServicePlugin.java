@@ -176,8 +176,8 @@ public class MybatisServicePlugin extends PluginAdapter {
     protected void addPageDO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         // set implements interface
-        topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.ro.PageQuery"));
-        topLevelClass.addImportedType("cn.luban.commons.ro.PageQuery");
+        topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.model.PageQuery"));
+        topLevelClass.addImportedType("cn.luban.commons.model.PageQuery");
         topLevelClass.addImportedType("lombok.Setter");
         topLevelClass.addImportedType("lombok.Getter");
         topLevelClass.addAnnotation("@Setter");
@@ -345,13 +345,17 @@ public class MybatisServicePlugin extends PluginAdapter {
         return method;
     }
 
-
     protected Method add(IntrospectedTable introspectedTable, String tableName, boolean f) {
         Method method = new Method();
         method.setName("add");
         if (f) method.addAnnotation("@Override");
         method.setReturnType(longInstance);
         method.addParameter(new Parameter(pojoType, toLowerCase(pojoType.getShortName())));
+
+        String primaryKey="getId";
+        for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+            primaryKey="get"+toUpperCase(introspectedColumn.getJavaProperty());
+        }
 
         method.setVisibility(JavaVisibility.PUBLIC);
         StringBuilder sb = new StringBuilder();
@@ -364,7 +368,7 @@ public class MybatisServicePlugin extends PluginAdapter {
         sb.append("\n");
         sb.append("\t\tif (flag) {");
         sb.append("\n");
-        sb.append("\t\t\t").append("return " + toLowerCase(pojoType.getShortName()) + ".getId();");
+        sb.append("\t\t\t").append("return " + toLowerCase(pojoType.getShortName()) + "."+primaryKey+"();");
         sb.append("\n");
         sb.append("\t\t}");
         sb.append("\n");
@@ -390,7 +394,10 @@ public class MybatisServicePlugin extends PluginAdapter {
                 method.addParameter(new Parameter(type, introspectedColumn.getJavaProperty()));
             }
         } else if (methodName.equals("deleteById")) {
-            method.addParameter(new Parameter(pojoType, toLowerCase(pojoType.getShortName())));
+            for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+                method.addParameter(new Parameter(introspectedColumn.getFullyQualifiedJavaType(), toLowerCase(introspectedColumn.getJavaProperty())));
+            }
+
         }
 
         method.setVisibility(JavaVisibility.PUBLIC);
@@ -404,7 +411,9 @@ public class MybatisServicePlugin extends PluginAdapter {
         } else if (methodName.equals("queryById")) {
             sb.append("id");
         } else if (methodName.equals("deleteById")) {
-            sb.append(toLowerCase(pojoType.getShortName()));
+            for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
+                sb.append(toLowerCase(introspectedColumn.getJavaProperty()));
+            }
         }
 
         sb.append(") > 0;");
@@ -457,15 +466,15 @@ public class MybatisServicePlugin extends PluginAdapter {
         topLevelClass.addImportedType(interfaceType);
         topLevelClass.addImportedType(pojoType);
         interfaces.addImportedType(pageDOType);
-        interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.ro.PageData"));
+        interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.model.PageData"));
         interfaces.addImportedType(listType);
 
         topLevelClass.addImportedType(slf4jLogger);
         topLevelClass.addImportedType(listType);
         topLevelClass.addImportedType("com.github.pagehelper.Page");
         topLevelClass.addImportedType("com.github.pagehelper.PageHelper");
-        topLevelClass.addImportedType("cn.luban.commons.ro.PageData");
-        topLevelClass.addImportedType("cn.luban.commons.object.ObjectUtils");
+        topLevelClass.addImportedType("cn.luban.commons.model.PageData");
+        topLevelClass.addImportedType("cn.luban.commons.utils.ObjectUtils");
         topLevelClass.addImportedType(slf4jLoggerFactory);
         topLevelClass.addImportedType(service);
         topLevelClass.addImportedType(autowired);

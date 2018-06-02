@@ -513,7 +513,7 @@ public class MybatisFacadePlugin extends PluginAdapter {
         interfaces.addImportedType(pageROType);
         interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.result.Result"));
         interfaces.addImportedType(roType);
-        interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.ro.PageData"));
+        interfaces.addImportedType(new FullyQualifiedJavaType("cn.luban.commons.model.PageData"));
 
         topLevelClass.addImportedType(listType);
         topLevelClass.addImportedType(facadeInterfaceType);
@@ -524,8 +524,8 @@ public class MybatisFacadePlugin extends PluginAdapter {
         topLevelClass.addImportedType("cn.luban.commons.result.Results");
         topLevelClass.addImportedType("cn.luban.commons.result.Result");
         topLevelClass.addImportedType("cn.luban.commons.validate.ValidateTools");
-        topLevelClass.addImportedType("cn.luban.commons.ro.PageData");
-        topLevelClass.addImportedType("cn.luban.commons.object.ObjectUtils");
+        topLevelClass.addImportedType("cn.luban.commons.model.PageData");
+        topLevelClass.addImportedType("cn.luban.commons.utils.ObjectUtils");
         topLevelClass.addImportedType(statecodeType);
         topLevelClass.addImportedType(slf4jLoggerFactory);
         topLevelClass.addImportedType(service);
@@ -618,8 +618,8 @@ public class MybatisFacadePlugin extends PluginAdapter {
     protected void addPageRO(TopLevelClass topLevelClass, IntrospectedTable introspectedTable, String tableName, List<GeneratedJavaFile> files) {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         // set implements interface
-        topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.ro.PageQuery"));
-        topLevelClass.addImportedType("cn.luban.commons.ro.PageQuery");
+        topLevelClass.setSuperClass(new FullyQualifiedJavaType("cn.luban.commons.model.PageQuery"));
+        topLevelClass.addImportedType("cn.luban.commons.model.PageQuery");
         topLevelClass.addImportedType("lombok.Getter");
         topLevelClass.addImportedType("lombok.Setter");
         topLevelClass.addAnnotation("@Getter");

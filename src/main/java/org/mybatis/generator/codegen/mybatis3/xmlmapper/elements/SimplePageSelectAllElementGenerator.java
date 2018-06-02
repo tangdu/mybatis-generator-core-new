@@ -83,7 +83,7 @@ public class SimplePageSelectAllElementGenerator extends AbstractXmlElementGener
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement dynamicElement = new XmlElement("where"); //$NON-NLS-1$
-        dynamicElement.addElement(new TextElement("is_delete=0 "));
+//        dynamicElement.addElement(new TextElement("is_delete=0 "));
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())) {
             if (introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")) {
                 continue;

@@ -50,7 +50,7 @@ public class SimpleSelectAllElementGenerator extends AbstractXmlElementGenerator
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement dynamicElement = new XmlElement("where"); //$NON-NLS-1$
-        dynamicElement.addElement(new TextElement("is_delete=0 "));
+//        dynamicElement.addElement(new TextElement("is_delete=0 "));
 
         answer.addElement(dynamicElement);
         if (context.getPlugins().sqlMapSelectAllElementGenerated(answer, introspectedTable)) {

@@ -130,8 +130,8 @@ public abstract class AbstractJavaMapperMethodGenerator extends AbstractGenerato
         sb.append("\n");
         if(!"".equals(agsName)) {
             sb.append("\t * @param ").append(ags).append(" ").append(agsName);
+            sb.append("\n");
         }
-        sb.append("\n");
         sb.append("\t * @return ").append(result);
         field.addJavaDocLine(sb.toString());
         field.addJavaDocLine(" */");
