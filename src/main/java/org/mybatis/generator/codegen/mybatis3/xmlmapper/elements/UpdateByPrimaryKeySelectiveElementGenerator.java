@@ -59,6 +59,8 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends AbstractXmlElem
         answer.addElement(new TextElement(sb.toString()));
 
         XmlElement dynamicElement = new XmlElement("set"); //$NON-NLS-1$
+        TextElement updateTime = new TextElement("update_time = now(),");
+        dynamicElement.addElement(updateTime);
         answer.addElement(dynamicElement);
 
         for (IntrospectedColumn introspectedColumn : ListUtilities.removeGeneratedAlwaysColumns(introspectedTable.getNonPrimaryKeyColumns())) {
@@ -69,6 +71,9 @@ public class UpdateByPrimaryKeySelectiveElementGenerator extends AbstractXmlElem
                 continue;
             }
             if (introspectedColumn.getActualColumnName().toLowerCase().equals("create_time")) {
+                continue;
+            }
+            if (introspectedColumn.getActualColumnName().toLowerCase().equals("update_time")) {
                 continue;
             }
             sb.setLength(0);

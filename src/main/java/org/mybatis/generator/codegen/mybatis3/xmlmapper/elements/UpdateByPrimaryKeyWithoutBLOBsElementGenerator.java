@@ -69,13 +69,16 @@ public class UpdateByPrimaryKeyWithoutBLOBsElementGenerator extends AbstractXmlE
             if (introspectedColumn.getActualColumnName().toLowerCase().equals("is_delete")) {
                 continue;
             }
+            if (introspectedColumn.getActualColumnName().toLowerCase().equals("update_time")) {
+                sb.append("update_time = now(),");
+            }else {
+                sb.append(MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
+                sb.append(" = "); //$NON-NLS-1$
+                sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn));
 
-            sb.append(MyBatis3FormattingUtilities.getEscapedColumnName(introspectedColumn));
-            sb.append(" = "); //$NON-NLS-1$
-            sb.append(MyBatis3FormattingUtilities.getParameterClause(introspectedColumn));
-
-            if (iter.hasNext()) {
-                sb.append(',');
+                if (iter.hasNext()) {
+                    sb.append(',');
+                }
             }
 
             answer.addElement(new TextElement(sb.toString()));
