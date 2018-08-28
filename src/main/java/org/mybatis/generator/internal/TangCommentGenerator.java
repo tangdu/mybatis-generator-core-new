@@ -38,8 +38,8 @@ public class TangCommentGenerator implements CommentGenerator {
     @Override
     public void addJavaFileComment(CompilationUnit compilationUnit) {
         compilationUnit.addFileCommentLine("/**");
-        compilationUnit.addFileCommentLine("* tangdu Inc.");
-        compilationUnit.addFileCommentLine("* Copyright (c) 2017-2018 All Rights Reserved.");
+        compilationUnit.addFileCommentLine("* www.luckincoffee.com Inc.");
+        compilationUnit.addFileCommentLine("* Copyright (c) 2018 All Rights Reserved.");
         compilationUnit.addFileCommentLine("*/");
     }
 

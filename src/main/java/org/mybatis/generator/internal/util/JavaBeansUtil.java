@@ -201,7 +201,6 @@ public class JavaBeansUtil {
         field.setType(fqjt);
         field.setName(property);
         context.getCommentGenerator().addFieldComment(field, introspectedTable, introspectedColumn);
-
         return field;
     }
 

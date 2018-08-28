@@ -43,7 +43,7 @@ public class TangduJavaCodeGenerationTest {
 
             List<GeneratedXmlFile> generatedJavaFiles2 = generateXMLFiles();
             for (GeneratedXmlFile generatedJavaFile : generatedJavaFiles2) {
-//                System.out.println(generatedJavaFile);
+                System.out.println(generatedJavaFile);
             }
         } catch (Exception e) {
             e.printStackTrace();;
